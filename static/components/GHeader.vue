@@ -1,6 +1,6 @@
 <template>
     <div class="header">
-        <img src="/static/logo.png" class="logo" @click="clickIndex">
+        <img src="/static/icons/ur_white.png" class="logo" @click="clickIndex">
         <div class="title" @click="clickIndex">Underpriced</div>
     </div>
 </template>
@@ -21,7 +21,7 @@
         background-color: #00BCD4;
         margin: 0;
         padding: 20px 40px;
-        height: 30px;
+        height: 35px;
     }
     .title {
         float: left;
@@ -31,9 +31,10 @@
     .logo {
         float: left;
         display: block;
-        width: 20px;
-        height: 20px;
-        margin-right: 20px;
+        width: 100px;
+        height: 100px;
+        margin-right: 10px;
+        margin-top: -15px;
     }
     .title:hover {
         cursor: pointer;

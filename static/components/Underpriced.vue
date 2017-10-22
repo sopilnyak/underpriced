@@ -46,12 +46,12 @@
                     <br>
                 </div>
             </paginate>
-            <paginate-links for="flats"
-                      :show-step-links="true"
-                    :step-links="{
-                        next: 'Вперед',
-                        prev: 'Назад'
-                     }"></paginate-links>
+            <paginate-links for="flats" :show-step-links="true"
+                            :step-links="{
+                                next: 'Вперед',
+                                prev: 'Назад'
+                            }">
+            </paginate-links>
         </div>
     </div>
 </template>
