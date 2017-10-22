@@ -18,7 +18,7 @@
 
 <style scoped>
     .header {
-        background-color: #FDD835;
+        background-color: #00BCD4;
         margin: 0;
         padding: 20px 40px;
         height: 30px;
@@ -26,6 +26,7 @@
     .title {
         float: left;
         font-size: 22px;
+        color: #ffffff;
     }
     .logo {
         float: left;

@@ -20,21 +20,21 @@
         display: inline-block;
         width: 20px;
         height: 20px;
-        background: rgba(249,168,37,0.72);
+        background: rgba(0,188,212,0.72);
     }
 
     .loading-2 {
         display: inline-block;
         width: 20px;
         height: 20px;
-        background: rgba(249,168,37,0.52);
+        background: rgba(0,188,212,0.52);
     }
 
     .loading-3 {
         display: inline-block;
         width: 20px;
         height: 20px;
-        background: rgba(249,168,37,0.32);
+        background: rgba(0,188,212,0.32);
     }
 
     .loading {

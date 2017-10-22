@@ -19,6 +19,6 @@
     .footer {
         margin-top: 20px;
         height: 30px;
-        background-color: #FDD835;
+        background-color: #00BCD4;
     }
 </style>

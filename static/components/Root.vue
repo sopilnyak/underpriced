@@ -30,7 +30,7 @@
         color: #313334;
         font-family: "Open Sans";
         font-size: 14px;
-        background-color: #FFFDE7;
+        background-color: #f3faec;
         min-width: 1000px;
     }
 
@@ -78,4 +78,168 @@
         margin: 0;
         padding: 0;
     }
+
+    .underpriced {
+        width: 100%;
+    }
+
+    .filters {
+        padding: 20px 40px;
+    }
+
+    select {
+        -webkit-appearance: button;
+        -webkit-border-radius: 2px;
+        -webkit-padding-end: 20px;
+        -webkit-padding-start: 2px;
+        -webkit-user-select: none;
+        background-image: url(http://i62.tinypic.com/15xvbd5.png);
+        background-color: #FFFFFF;
+        background-position: 97% center;
+        background-repeat: no-repeat;
+        border: 1px solid #00ACC1;
+        color: #555;
+        font-size: 15px;
+        overflow: hidden;
+        padding: 5px 10px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 160px;
+        margin-right: 10px;
+    }
+
+    select:hover {
+        cursor: pointer;
+    }
+
+    .button {
+        -webkit-appearance: button;
+        -webkit-border-radius: 2px;
+        background-color: #E0F7FA;
+        border: 1px solid #00ACC1;
+        color: #555;
+        overflow: hidden;
+        padding: 5px 10px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: inline-block;
+        text-decoration: none;
+        margin-top: 10px;
+    }
+
+    .button:hover {
+        cursor: pointer;
+    }
+
+    input {
+        -webkit-border-radius: 2px;
+        padding: 5px 10px;
+        border: 1px solid #00ACC1;
+        color: #555;
+        font-size: 15px;
+        overflow: hidden;
+        padding: 5px 10px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        width: 160px;
+        margin-right: 10px;
+    }
+
+    .entry {
+        display: block;
+        margin: 20px 0;
+        border: 1px solid #00ACC1;
+        -webkit-border-radius: 2px;
+        padding: 20px 30px;
+    }
+
+    .entry:hover {
+        background-color: #B2EBF2;
+        border-color: #00838F;
+    }
+
+    .first-column {
+        float: left;
+        width: 30%;
+    }
+
+    .second-column {
+        float: left;
+        width: 30%;
+    }
+
+    .third-column {
+        float: right;
+        text-align: right;
+    }
+
+    br {
+        clear: both;
+    }
+
+    .actual-price {
+        font-size: 30px;
+        color: #424445;
+    }
+
+    .actual-price-hint {
+        color: gray;
+        font-size: 18px;
+        margin-left: 2px;
+    }
+
+    .predicted-price-title {
+        color: gray;
+        font-size: inherit;
+    }
+
+    .predicted-price-hint {
+        color: gray;
+        font-size: 15px;
+    }
+
+    .source {
+        font-size: 10px;
+        color: gray;
+        text-decoration: none;
+    }
+
+    .subway {
+        font-weight: bold;
+    }
+
+    .location {
+        font-size: 12px;
+    }
+
+    .district {
+        display: block;
+        margin-top: 5px;
+    }
+
+    .rooms {
+
+    }
+
+    .rooms-hint {
+        color: gray;
+    }
+
+    .area {
+
+    }
+
+    .area-hint {
+        color: gray;
+    }
+
+    .floor {
+
+    }
+
+    .external {
+        display: block;
+        margin-top: 3px;
+    }
+
 </style>

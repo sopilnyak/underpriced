@@ -17,9 +17,3 @@
         }
     }
 </script>
-
-<style>
-    #main {
-        font-family: 'Open Sans';
-    }
-</style>

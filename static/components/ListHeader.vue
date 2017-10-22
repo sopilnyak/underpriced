@@ -18,10 +18,12 @@
         name: 'ListHeader',
         methods: {
             clickOverpriced() {
-                this.$router.push({name: 'overpriced'})
+                this.$store.state.active = 'overpriced';
+                this.$router.push({name: 'overpriced'});
             },
             clickUnderpriced() {
-                this.$router.push({name: 'underpriced'})
+                this.$store.state.active = 'underpriced';
+                this.$router.push({name: 'underpriced'});
             },
         }
     }
@@ -30,10 +32,10 @@
 <style scoped>
     .list-header {
         padding: 0 40px;
-        background-color: #FDD835;
+        background-color: #00BCD4;
     }
     .tab {
-        background-color: #FFF59D;
+        background-color: #80DEEA;
         padding: 7px;
         display: inline-block;
         width: 200px;
@@ -43,6 +45,6 @@
         cursor: pointer;
     }
     .tabActive {
-        background-color: #FFFDE7;
+        background-color: #f3faec;
     }
 </style>
