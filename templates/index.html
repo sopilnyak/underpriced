@@ -1,0 +1,28 @@
+{% load render_bundle from webpack_loader %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+{% load static %}
+    <meta charset="UTF-8">
+
+    <script src="http://code.jquery.com/jquery-latest.min.js" charset="utf-8"></script>
+
+    <!-- Load static fonts -->
+    <style>
+        @font-face {
+            font-family: 'Open Sans';
+            src: url('{% static "fonts/OpenSans.ttf" %}') format('truetype'),
+            url('{% static "fonts/OpenSans-Bold.ttf" %}') format('truetype'),
+            url('{% static "fonts/OpenSans-Italic.ttf" %}') format('truetype'),
+            url('{% static "fonts/OpenSans-Light.ttf" %}') format('truetype');
+        }
+    </style>
+
+    <title>Underpriced &ndash; поиск недооцененных квартир</title>
+</head>
+<body>
+    <div id="app"></div>
+    {% render_bundle 'index' %}
+</body>
+</html>

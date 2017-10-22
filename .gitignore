@@ -1,0 +1,13 @@
+.idea/
+venv/
+.env
+*.db
+*.orig
+*~
+__pycache__/
+node_modules/
+package.json
+django.conf
+dist/
+db.sqlite3
+core/migrations
