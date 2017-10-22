@@ -158,9 +158,19 @@
         border-color: #00838F;
     }
 
+    .image-column {
+        float: left;
+        width: 250px;
+        margin-right: 30px;
+    }
+
+    .flat-image {
+        width: 250px;
+    }
+
     .first-column {
         float: left;
-        width: 30%;
+        width: 20%;
     }
 
     .second-column {
