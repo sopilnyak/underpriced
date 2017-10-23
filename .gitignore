@@ -11,3 +11,5 @@ django.conf
 dist/
 db.sqlite3
 core/migrations
+__init__
+.ipynb_checkpoints

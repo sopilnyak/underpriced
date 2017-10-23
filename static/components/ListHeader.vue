@@ -6,9 +6,6 @@
         <a class="tab" :class="{ tabActive: this.$store.state.active === 'overpriced' }" @click="clickOverpriced">
             Переоцененные
         </a>
-        <a class="tab" :class="{ tabActive: this.$store.state.isUnderpricedActive === 'estimate' }">
-            Оценить квартиру
-        </a>
     </div>
 </template>
 
