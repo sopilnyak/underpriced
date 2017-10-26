@@ -23,13 +23,12 @@
             >
                 <div v-for="flat in paginated('flats')" class="entry">
                     <div class="image-column">
-                        <img :src="flat.image" class="flat-image">
+                        <div :style="{ backgroundImage: 'url(' + flat.image + ')' }" class="flat-image"></div>
                     </div>
                     <div class="first-column">
                         <span class="subway">м. {{ flat.underground }}</span><br>
                         <span class="location">{{ flat.underground_distance }} мин. от метро</span><br>
                         <!-- <span class="district">район {{ flat.district }}</span> -->
-                        <a :href="flat.ad" target="_blank" class="button">Перейти к объявлению</a>
                     </div>
                     <div class="second-column">
                         <span v-if="flat.rooms_number === -1" class="rooms">Студия,</span>
@@ -51,6 +50,7 @@
                         <!--<span class="predicted-price-title">Предсказанная цена:</span>-->
                         <!--<span class="predicted-price">{{ flat.predicted_price }}</span>-->
                         <!--<span class="predicted-price-hint">руб. / месяц</span><br>-->
+                        <a :href="flat.ad" target="_blank" class="button">Перейти к объявлению</a><br>
                         <a :href="flat.ad" target="_blank" class="source">cian.ru</a>
                     </div>
                     <br>
