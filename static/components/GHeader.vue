@@ -18,7 +18,9 @@
 
 <style scoped>
     .header {
-        background-color: #00BCD4;
+        background: #072050;
+        background: -webkit-linear-gradient(to right, #072050, #375084, #072050);
+        background: linear-gradient(to right, #072050, #375084, #072050);
         margin: 0;
         padding: 20px 40px;
         height: 35px;

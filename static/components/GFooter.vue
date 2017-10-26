@@ -19,6 +19,8 @@
     .footer {
         margin-top: 20px;
         height: 30px;
-        background-color: #00BCD4;
+        background: #072050;
+        background: -webkit-linear-gradient(to right, #072050, #375084, #072050);
+        background: linear-gradient(to right, #072050, #375084, #072050);
     }
 </style>

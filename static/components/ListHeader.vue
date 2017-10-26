@@ -31,11 +31,12 @@
 
 <style scoped>
     .list-header {
-        padding: 0 40px;
-        background-color: #00BCD4;
+        background: #072050;
+        background: -webkit-linear-gradient(to right, #072050, #375084, #072050);
+        background: linear-gradient(to right, #072050, #375084, #072050);
     }
     .tab {
-        background-color: #80DEEA;
+        background-color: rgba(167,177,199,0.78);
         padding: 7px;
         display: inline-block;
         width: 200px;
@@ -45,6 +46,6 @@
         cursor: pointer;
     }
     .tabActive {
-        background-color: #f3faec;
+        background-color: #EDEFF1;
     }
 </style>

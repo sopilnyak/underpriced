@@ -30,7 +30,7 @@
         color: #313334;
         font-family: "Open Sans";
         font-size: 14px;
-        background-color: #f3faec;
+        background-color: #EDEFF1;
         min-width: 1000px;
     }
 
@@ -97,7 +97,7 @@
         background-color: #FFFFFF;
         background-position: 97% center;
         background-repeat: no-repeat;
-        border: 1px solid #00ACC1;
+        border: 1px solid #375084;
         color: #555;
         font-size: 15px;
         overflow: hidden;
@@ -112,12 +112,19 @@
         cursor: pointer;
     }
 
+    *:focus {
+    outline: none;
+        border: 1px solid #010B20;
+    }
+
     .button {
-        -webkit-appearance: button;
+        -webkit-box-shadow: 1px 1px 5px 0 rgba(0,0,0,0.35);
+        -moz-box-shadow: 1px 1px 5px 0 rgba(0,0,0,0.35);
+        box-shadow: 1px 1px 5px 0 rgba(0,0,0,0.35);
         -webkit-border-radius: 2px;
-        background-color: #E0F7FA;
-        border: 1px solid #00ACC1;
-        color: #555;
+        background-color: #375084;
+        border: 1px solid #375084;
+        color: #EDEFF1;
         overflow: hidden;
         padding: 5px 10px;
         text-overflow: ellipsis;
@@ -134,7 +141,7 @@
     input {
         -webkit-border-radius: 2px;
         padding: 5px 10px;
-        border: 1px solid #00ACC1;
+        border: 1px solid #375084;
         color: #555;
         font-size: 15px;
         overflow: hidden;
@@ -148,14 +155,14 @@
     .entry {
         display: block;
         margin: 20px 0;
-        border: 1px solid #00ACC1;
+        border: 1px solid #375084;
         -webkit-border-radius: 2px;
         padding: 20px 30px;
     }
 
     .entry:hover {
-        background-color: #B2EBF2;
-        border-color: #00838F;
+        background-color: rgba(171,181,202,0.25);
+        border-color: #010B20;
     }
 
     .image-column {
@@ -166,6 +173,9 @@
 
     .flat-image {
         width: 250px;
+        height: 120px;
+        background-position: center center;
+        background-repeat: no-repeat;
     }
 
     .first-column {
