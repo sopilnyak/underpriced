@@ -33,8 +33,8 @@ class CianSpiderV2(scrapy.Spider):
         end_price = 200000
         price_step = 10000
         pattern = 'https://www.cian.ru/cat.php?deal_type=rent&engine_version=2' \
-                + '&offer_type=flat&quality=1&region=1&sort=id_user&type=4' \
-                + '&minprice={}&maxprice={}'
+                  + '&offer_type=flat&quality=1&region=1&sort=id_user&type=4' \
+                  + '&minprice={}&maxprice={}'
         for price in range(start_price, end_price, price_step):
             yield scrapy.Request(pattern.format(price, price + price_step - 1))
 
@@ -90,6 +90,17 @@ class CianSpiderV2(scrapy.Spider):
     def extract_flat_description(self, response):
         return response.xpath('//div[@class="object_descr_text"]/text()').extract()[0].strip()
 
+    def extract_flat_underground(self, response):
+        underground_names = map(
+            lambda name: name[:-1].strip(),
+            response.xpath('//a[@class="object_item_metro_name"]/text()').extract()
+        )
+        distances = map(
+            lambda distance: ' '.join(distance.split()),
+            response.xpath('//span[@class="object_item_metro_comment"]/text()').extract()
+        )
+        return dict(zip(underground_names, distances))
+
     def parse_flat(self, response):
         flat = {}
         flat['url'] = response.url
@@ -97,6 +108,7 @@ class CianSpiderV2(scrapy.Spider):
         flat['rooms'] = self.extract_flat_rooms_count(response)
         flat['images'] = self.extract_flat_images(response)
         flat['description'] = self.extract_flat_description(response)
+        flat['underground'] = self.extract_flat_underground(response)
         flat.update(self.extract_flat_additional_data(response))
 
         yield flat
