@@ -6,7 +6,7 @@
         <a class="tab" :class="{ tabActive: this.$store.state.active === 'overpriced' }" @click="clickOverpriced">
             Переоцененные
         </a>
-        <a class="tab" :class="{ tabActive: this.$store.state.active === 'estimate' }">
+        <a class="tab" :class="{ tabActive: this.$store.state.active === 'estimate' }" @click="clickEstimate">
             Оценить квартиру
         </a>
     </div>
@@ -24,6 +24,10 @@
             clickUnderpriced() {
                 this.$store.state.active = 'underpriced';
                 this.$router.push({name: 'underpriced'});
+            },
+            clickEstimate() {
+                this.$store.state.active = 'estimate';
+                this.$router.push({name: 'estimate'});
             },
         }
     }

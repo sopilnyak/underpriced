@@ -73,9 +73,6 @@
         },
         data: function () {
             return {
-                filterRooms: "",
-                filterSubway: "",
-                filterDistrict: "",
                 filterQueries: {
                     rooms_number: "",
                     underground: "",
