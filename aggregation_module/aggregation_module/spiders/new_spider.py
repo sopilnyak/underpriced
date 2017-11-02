@@ -37,10 +37,12 @@ class CianSpiderV2(scrapy.Spider):
                   + '&minprice={}&maxprice={}'
         for price in range(start_price, end_price, price_step):
             yield scrapy.Request(pattern.format(price, price + price_step - 1))
+            break
 
     def parse(self, response):
         for next_page in response.css('a.underground-header--A7XgS'):
             yield response.follow(next_page, self.parse_flat)
+        return
         for next_page in response.css('a.list-itemLink--39icE'):
             yield response.follow(next_page, self.parse)
 
@@ -106,6 +108,13 @@ class CianSpiderV2(scrapy.Spider):
         )
         return dict(zip(underground_names, distances))
 
+    def extract_flat_district(self, response):
+        district = re.search(r'<div class=\"bti__data__name\">Название<\/div>.*?<td>([^<]*)<\/td>', response.text, re.MULTILINE | re.S)
+        if district is not None:
+            return district.group(1)
+        return ''
+
+
     def parse_flat(self, response):
         flat = {}
         flat['url'] = response.url
@@ -114,6 +123,7 @@ class CianSpiderV2(scrapy.Spider):
         flat['images'] = self.extract_flat_images(response)
         flat['description'] = self.extract_flat_description(response)
         flat['underground'] = self.extract_flat_underground(response)
+        flat['district'] = self.extract_flat_district(response)
         flat.update(self.extract_flat_additional_data(response))
 
         yield flat
