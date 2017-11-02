@@ -60,13 +60,18 @@ class CianSpiderV2(scrapy.Spider):
     def extract_flat_rooms_count(self, response):
         line = response.xpath('//h2[@class="cf_sticky_head-head"]/text()').extract()[0].strip()
         value = line.split('-', 2)[0]
-        return value
+        return self.cleanup_string(value)
 
     def extract_flat_images(self, response):
         return response.xpath('//div[@class="fotorama"]/img/@src').extract()
 
     def extract_flat_description(self, response):
         return response.xpath('//div[@class="object_descr_text"]/text()').extract()[0].strip()
+
+    def fix_flat_data(self, flat):
+        flat['kitchen_area'].replace(',', '.')
+        flat['living_area'].replace(',', '.')
+        return flat
 
     def parse_flat(self, response):
         flat = {}

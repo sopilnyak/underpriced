@@ -10,8 +10,8 @@ class CianSpider(scrapy.Spider):
 
     def parse(self, response):
         filename = 'cian.html'
-        with open(filename, 'wb') as f:
-            f.write(response.body)
+        # with open(filename, 'wb') as f:
+        #     f.write(response.body)
 
         self.log('Saved file %s' % filename)
         yield self.parse_details(response)
@@ -128,7 +128,6 @@ class CianSpider(scrapy.Spider):
 
         flat_features['is_commission'] = self.extract_comission(flat_descr)
 
-        # МНОГОКОМНАТНАЯ!
         flat_features['rooms_number'] = self.extract_rooms(flat_descr)
 
         # (total, kitchen, for living)
