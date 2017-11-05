@@ -10,7 +10,7 @@ import numpy as np
 import json
 from sklearn.preprocessing import Imputer
 
-df = pd.read_json("underpriced/aggregation_module/flats.json", orient='values')
+df = pd.read_json("/home/alena/Documents/underpriced/aggregation_module/flats.json", orient='values')
 
 
 # In[2]:
@@ -295,20 +295,18 @@ df.info()
 
 
 # Create X and Y for data analys
-X = df.drop({'price'}, axis=1)
-Y = df['price']
 
 
 # In[40]:
 
 
-X.shape
+df.shape
 
 
 # In[41]:
 
 
-X.head()
+df.head()
 
 
 # ## Coding categorial signs   
@@ -365,19 +363,13 @@ def perform_coding_and_delete_column(df, column_name, le_encoder):
 # In[43]:
 
 
-X, metro_le_encoder = encode_with_OneHotEncoder_and_delete_column(X,'underground')
-X, house_type_le_encoder = encode_with_OneHotEncoder_and_delete_column(X,'house_type')
-X, repair_le_encoder = encode_with_OneHotEncoder_and_delete_column(X,'repair')
+df, metro_le_encoder = encode_with_OneHotEncoder_and_delete_column(df,'underground')
+df, house_type_le_encoder = encode_with_OneHotEncoder_and_delete_column(df,'house_type')
+df, repair_le_encoder = encode_with_OneHotEncoder_and_delete_column(df,'repair')
 
 
 # In[44]:
 
 
-X.to_csv('flats_feaures.csv')
-
-
-# In[45]:
-
-
-Y.to_csv('flats_price.csv')
+df.to_csv('flats_features.csv')
 
