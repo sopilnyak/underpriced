@@ -37,12 +37,11 @@ class CianSpiderV2(scrapy.Spider):
                   + '&minprice={}&maxprice={}'
         for price in range(start_price, end_price, price_step):
             yield scrapy.Request(pattern.format(price, price + price_step - 1))
-            break
 
     def parse(self, response):
         for next_page in response.css('a.underground-header--A7XgS'):
             yield response.follow(next_page, self.parse_flat)
-        return
+
         for next_page in response.css('a.list-itemLink--39icE'):
             yield response.follow(next_page, self.parse)
 
