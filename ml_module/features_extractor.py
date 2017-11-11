@@ -291,19 +291,19 @@ df['price'] = df['price'].map(lambda item: int(item))
 df.info()
 
 
-# In[39]:
+# In[40]:
 
 
 # Create X and Y for data analys
 
 
-# In[40]:
+# In[41]:
 
 
 df.shape
 
 
-# In[41]:
+# In[42]:
 
 
 df.head()
@@ -312,7 +312,7 @@ df.head()
 # ## Coding categorial signs   
 # We need to code underground, house_type, repair
 
-# In[42]:
+# In[43]:
 
 
 from sklearn.preprocessing import LabelEncoder
@@ -360,7 +360,7 @@ def perform_coding_and_delete_column(df, column_name, le_encoder):
     return pd.concat([df, df_with_features], axis=1)
 
 
-# In[43]:
+# In[44]:
 
 
 df, metro_le_encoder = encode_with_OneHotEncoder_and_delete_column(df,'underground')
@@ -368,8 +368,14 @@ df, house_type_le_encoder = encode_with_OneHotEncoder_and_delete_column(df,'hous
 df, repair_le_encoder = encode_with_OneHotEncoder_and_delete_column(df,'repair')
 
 
-# In[44]:
+# In[45]:
 
 
 df.to_csv('flats_features.csv')
+
+
+# In[46]:
+
+
+df.shape
 

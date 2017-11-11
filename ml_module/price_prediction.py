@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[164]:
+# In[6]:
 
 
 import pandas as pd
@@ -10,15 +10,16 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.cross_validation import KFold
 from sklearn.cross_validation import cross_val_score
 from sklearn.model_selection import GridSearchCV
+from sklearn.externals import joblib
 
 
-# In[165]:
+# In[7]:
 
 
 df = pd.read_csv('flats_features.csv')
 
 
-# In[166]:
+# In[8]:
 
 
 X = df.drop({'price'}, axis=1)
@@ -27,26 +28,47 @@ X.set_index(X['id'], inplace=True)
 X = X.drop('id', axis=1)
 
 
-# In[167]:
+# In[9]:
+
+
+X.info()
+
+
+# In[10]:
 
 
 records_count = Y.count()
 kf = KFold(n=records_count, n_folds=7, shuffle=True, random_state=42)
 
+estims = {}
+
 for k in range(1, 75, 2):
     clf = RandomForestRegressor(n_estimators=k, random_state=0)
     quality = cross_val_score(clf, X, Y, scoring='r2', cv=kf).mean()
-    print (k, quality)
+    estims[k] = quality
 
 
-# In[192]:
+# In[11]:
 
 
-clf = RandomForestRegressor(n_estimators=73, random_state=42)
+best_estim = sorted(estims.items(), key=lambda x: -x[1])
+print(best_estim)
+
+
+# In[13]:
+
+
+clf = RandomForestRegressor(n_estimators=best_estim[0][0], random_state=42)
 clf.fit(X, Y)
 
 
-# In[193]:
+# In[14]:
+
+
+joblib.dump(clf, 'model_random_forest.pkl') 
+
+
+# In[15]:
 
 
 features = X.columns.values
@@ -58,14 +80,14 @@ for i in range(0, len(indices)):
     print(str(features[indices[i]]) + " " + str(importances[indices[i]]))
 
 
-# In[194]:
+# In[16]:
 
 
 predictions = pd.DataFrame(clf.predict(X))[0]
 X = X.reset_index()
 
 
-# In[196]:
+# In[17]:
 
 
 res_info = pd.DataFrame(columns=[u'Ошибка,%',u'Ошибка,$',u'Цена м.кв.'])
@@ -79,68 +101,62 @@ for i in Y.index:
     })
 
 
-# In[202]:
+# In[18]:
 
 
 predictions = pd.DataFrame(predictions)
 
 
-# In[204]:
+# In[19]:
 
 
 predictions = predictions.set_index(X['id'])
 
 
-# In[207]:
+# In[20]:
 
 
 res_info = res_info.set_index(X['id'])
 
 
-# In[208]:
+# In[21]:
 
 
 res_info
 
 
-# In[209]:
+# In[22]:
 
 
 res_info.sort_values(by=u'Ошибка,%')[:5]
 
 
-# In[210]:
+# In[23]:
 
 
 res_info.sort_values(by=u'Ошибка,%', ascending=False)[:5]
 
 
-# In[214]:
+# In[24]:
 
 
 X.set_index(X['id'], inplace=True)
 X = X.drop('id', axis=1)
 
 
-# In[216]:
-
-
-X.loc[163828377]
-
-
-# In[221]:
+# In[26]:
 
 
 predictions = predictions[0].map(lambda x: int(x))
 
 
-# In[222]:
+# In[27]:
 
 
 predictions.to_csv('real_prices.csv')
 
 
-# In[223]:
+# In[28]:
 
 
 predictions
