@@ -1,11 +1,27 @@
 from django.shortcuts import render
 from django.http import JsonResponse
+from pymongo import MongoClient
+
+client = MongoClient(
+    'localhost',
+    user='underpriced',
+    password='mongounderpriced',
+    authSource='underpriced'
+)
+
+flats = client.flats
 
 
 # Pages
 def index(request):
 
     return render(request, 'index.html')
+
+def get_flat(request, id):
+    flat = flats.find_one({'_id': id})
+    if flat is None:
+        flat = {}
+    return JsonResponse(flats)
 
 
 # def usernames(request):
