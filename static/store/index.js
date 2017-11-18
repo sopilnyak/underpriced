@@ -20,8 +20,9 @@ export default new Vuex.Store({
     actions: {
         loadUnderpriced({commit}) {
             $.ajax({
-                url: '/static/data/flats.json',
+                url: '/flats/',
                 type: 'GET',
+                dataType: 'json',
                 success: function (response) {
                     commit('setUnderpriced', response);
                 },
