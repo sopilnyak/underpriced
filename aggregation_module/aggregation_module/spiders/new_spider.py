@@ -63,7 +63,10 @@ class CianSpiderV2(scrapy.Spider):
         return data
 
     def extract_flat_price(self, response):
-        line = response.xpath('//div[@class="object_descr_price"]/text()').extract()[0].strip()
+        extraction = response.xpath('//div[@class="object_descr_price"]/text()').extract()
+        if len(extraction) == 0:
+            return None
+        line = extraction[0].strip()
         value = ''.join(re.findall(r'\d+', line))
         if 'руб' in line:
             return {
@@ -124,5 +127,5 @@ class CianSpiderV2(scrapy.Spider):
         flat['underground'] = self.extract_flat_underground(response)
         flat['district'] = self.extract_flat_district(response)
         flat.update(self.extract_flat_additional_data(response))
-
-        yield flat
+        if flat['price'] is not None:
+            yield flat

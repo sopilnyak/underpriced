@@ -4,7 +4,9 @@ from pymongo import MongoClient
 
 client = MongoClient('mongodb://underpriced:mongounderpriced@example.com/underpriced?authMechanism=SCRAM-SHA-1')
 
-flats = client.flats
+db = client.underpriced
+
+flats = db.flats
 
 
 # Pages
@@ -17,6 +19,10 @@ def get_flat(request, id):
     if flat is None:
         flat = {}
     return JsonResponse(flats)
+
+def get_flat_list(request):
+    flat_list = list(flats.find())
+    return JsonResponse(flat_list)
 
 
 # def usernames(request):
