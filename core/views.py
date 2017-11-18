@@ -2,12 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from pymongo import MongoClient
 
-client = MongoClient(
-    'localhost',
-    user='underpriced',
-    password='mongounderpriced',
-    authSource='underpriced'
-)
+client = MongoClient('mongodb://underpriced:mongounderpriced@example.com/underpriced?authMechanism=SCRAM-SHA-1')
 
 flats = client.flats
 
