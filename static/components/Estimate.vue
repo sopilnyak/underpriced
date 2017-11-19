@@ -10,8 +10,11 @@
             <form class="estimate-input">
                 <div class="input-block underground">
                     <div class="input-label">Метро</div>
-                    <input v-on:keyup.enter="postEstimate"
+                    <input v-on:keyup.enter="postEstimate" v-validate="'required'" name="underground"
                            v-model="filterSubway" ref="underground" class="underground-input">
+                    <span v-show="errors.has('underground')" class="error-message">
+                        {{ errors.first('underground') }}
+                    </span>
                 </div>
                 <div class="subway-list"
                      :class="{ 'subway-list-hidden': this.filterSubway === '' || this.isSubwaySelected !== null }" >
@@ -31,26 +34,37 @@
                         <option value="студия">Студия</option>
                     </select>
                 </div>
-                <div class="input-block">
-                    <div class="input-label area">Общая площадь, кв. м.</div>
+                <div class="input-block area">
+                    <div class="input-label">Общая площадь, кв. м.</div>
                     <input v-on:keyup.enter="postEstimate" class="area-input"
+                           v-validate="{ required: true, regex: /^\d*[\.\,]?\d*$/ }" name="area"
                            ref="area">
+                    <span v-show="errors.has('area')" class="error-message">
+                        {{ errors.first('area') }}
+                    </span>
                 </div>
                 <div class="input-block kitchen-area">
                     <div class="input-label">Площадь кухни, кв. м.</div>
                     <input v-on:keyup.enter="postEstimate" class="kitchen-area-input"
+                           v-validate="{ required: true, regex: /^\d*[\.\,]?\d*$/ }" name="kitchen-area"
                            ref="kitchen_area">
+                    <span v-show="errors.has('kitchen-area')" class="error-message">
+                        {{ errors.first('kitchen-area') }}
+                    </span>
                 </div>
                 <div class="input-block living-area">
                     <div class="input-label">Жилая площадь, кв. м.</div>
                     <input v-on:keyup.enter="postEstimate" class="living-area-input"
+                           v-validate="{ required: true, regex: /^\d*[\.\,]?\d*$/ }" name="living-area"
                            ref="living_area">
+                    <span v-show="errors.has('living-area')" class="error-message">
+                        {{ errors.first('living-area') }}
+                    </span>
                 </div>
                 <div class="input-block repair">
                     <div class="input-label">Ремонт</div>
                     <select ref="repair" class="repair-input">
-                        <option selected></option>
-                        <option value="косметический">Косметический</option>
+                        <option value="косметический" selected>Косметический</option>
                         <option value="евроремонт">Евроремонт</option>
                         <option value="дизайнерский">Дизайнерский</option>
                         <option value="отсутствует">Отсутствует</option>
@@ -74,23 +88,34 @@
                 <div class="input-block curr-floor">
                     <div class="input-label">Этаж</div>
                     <input v-on:keyup.enter="postEstimate" class="curr-floor-input"
+                           v-validate="{ required: true, numeric: true }" name="curr-floor"
                            ref="curr_floor">
+                    <span v-show="errors.has('curr-floor')" class="error-message">
+                        {{ errors.first('curr-floor') }}
+                    </span>
                 </div>
                 <div class="input-block total-floor">
                     <div class="input-label">Этажей в доме</div>
                     <input v-on:keyup.enter="postEstimate" class="total-floor-input"
-                           ref="total_floor">
+                           v-validate="{ required: true, numeric: true, min_value: this.getFilledCurrFloor() }"
+                           name="total-floor" ref="total_floor">
+                    <span v-show="errors.has('total-floor')" class="error-message">
+                        {{ errors.first('total-floor') }}
+                    </span>
                 </div>
                 <div class="input-block construction-year">
                     <div class="input-label">Год постройки дома</div>
                     <input v-on:keyup.enter="postEstimate" class="construction-year-input"
-                           ref="construction_year">
+                           v-validate="{ required: true, numeric: true, max_value: this.getCurrentYear() }"
+                           name="construction-year" ref="construction_year">
+                    <span v-show="errors.has('construction-year')" class="error-message">
+                        {{ errors.first('construction-year') }}
+                    </span>
                 </div>
                 <div class="input-block house-type">
                     <div class="input-label">Тип дома</div>
                     <select ref="house_type" class="house-type-input">
-                        <option selected></option>
-                        <option value="панельный">Панельный</option>
+                        <option value="панельный" selected>Панельный</option>
                         <option value="блочный">Блочный</option>
                         <option value="кирпичный">Кирпичный</option>
                         <option value="монолитный">Монолитный</option>
@@ -104,6 +129,7 @@
             <div class="post-estimate">
                 <a @click.prevent="postEstimate" target="_blank" class="button button-estimate">Оценить</a>
             </div>
+            <div v-if="hasFormErrors" class="error-message-big">Пожалуйста, проверьте форму на ошибки.</div>
             <div v-if="isEstimated" class="price">
                 <span class="price-text">Предсказанная цена:</span>
                 <span class="price-number">{{ estimatedPrice }} рублей</span>
@@ -115,6 +141,7 @@
 
 <script>
     import GLoading from "./GLoading.vue"
+    import ru from 'vee-validate/dist/locale/ru';
 
     export default {
         name: 'Estimate',
@@ -127,11 +154,24 @@
                 filterSubway: "",
                 isSubwaySelected: null,
                 estimatedPrice: null,
+                hasFormErrors: false,
             }
         },
         created() {
             this.loadSubways();
             this.$store.state.active = 'estimate';
+            this.$validator.localize('ru', {
+                messages: ru.messages,
+                attributes: {
+                    'underground': '"Метро"',
+                    'area': '"Общая площадь"',
+                    'kitchen-area': '"Площадь кухни"',
+                    'living-area': '"Жилая площадь"',
+                    'curr-floor': '"Этаж"',
+                    'total-floor': '"Этажей в доме"',
+                    'construction-year': '"Год постройки дома"',
+              }
+            });
         },
         computed: {
             isNotLoaded() {
@@ -169,37 +209,51 @@
             },
             postEstimate() {
                 let this_ = this;
-                $.ajax({
-                    url: '/flats/estimate/',
-                    type: 'POST',
-                    data: {
-                        area: this.$refs.area.value,
-                        combined_bathroom_count: 1,
-                        construction_year: this.$refs.construction_year.value,
-                        house_type: this.$refs.house_type.value,
-                        kitchen_area: this.$refs.kitchen_area.value,
-                        living_area: this.$refs.living_area.value,
-                        repair: this.$refs.repair.value,
-                        rooms: this.$refs.rooms.value,
-                        underground: this.$refs.underground.value,
-                        has_balcony: this.$refs.has_balcony.value,
-                        has_loggia: this.$refs.has_loggia.value,
-                        curr_floor: this.$refs.curr_floor.value,
-                        total_floor: this.$refs.total_floor.value
-                    },
-                    success: function (response) {
-                        this_.estimatedPrice = Math.round(response.price * 100) / 100;
-                    },
-                    error: function (jqXHR, e) {
-                        //console.log('Unable to load overpriced' + e);
-                        alert("error!");
+                this.$validator.validateAll().then((result) => {
+                    if (!result) {
+                        this_.hasFormErrors = true;
+                        return;
                     }
+                    $.ajax({
+                        url: '/flats/estimate/',
+                        type: 'POST',
+                        data: {
+                            area: this_.formatFloat(this.$refs.area.value),
+                            combined_bathroom_count: 1,
+                            construction_year: this.$refs.construction_year.value,
+                            house_type: this.$refs.house_type.value,
+                            kitchen_area: this_.formatFloat(this.$refs.kitchen_area.value),
+                            living_area: this_.formatFloat(this.$refs.living_area.value),
+                            repair: this.$refs.repair.value,
+                            rooms: this.$refs.rooms.value,
+                            underground: this.$refs.underground.value,
+                            has_balcony: this.$refs.has_balcony.value,
+                            has_loggia: this.$refs.has_loggia.value,
+                            curr_floor: this.$refs.curr_floor.value,
+                            total_floor: this.$refs.total_floor.value
+                        },
+                        success: function (response) {
+                            this_.estimatedPrice = Math.round(response.price * 100) / 100;
+                        },
+                        error: function (jqXHR, e) {
+                            console.log('Estimating error');
+                        }
+                    });
                 });
-
+            },
+            formatFloat(input) {
+                // replaces commas with dots
+                return input.replace(/,/g, '.');
             },
             selectSubway(subway) {
                 this.filterSubway = subway;
                 this.isSubwaySelected = subway;
+            },
+            getCurrentYear() {
+                return (new Date()).getFullYear();
+            },
+            getFilledCurrFloor() {
+                return this.$refs.curr_floor === undefined ? 0 : this.$refs.curr_floor.value;
             }
         },
         watch: {
@@ -240,7 +294,6 @@
     .post-estimate {
         margin-top: 20px;
         margin-left: 100px;
-        width: 100%;
     }
     .price {
         margin-top: 20px;
@@ -280,7 +333,7 @@
         width: 12em;
     }
     .area {
-        width: 13em;
+        width: 9.8em;
     }
     .area-input {
         width: 7em !important;
@@ -350,5 +403,14 @@
     }
     br {
         clear: both;
+    }
+    .error-message {
+        color: red;
+        font-size: 11px;
+    }
+    .error-message-big {
+        color: red;
+        margin-top: 15px;
+        margin-left: 100px;
     }
 </style>

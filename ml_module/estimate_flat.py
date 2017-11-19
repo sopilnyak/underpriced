@@ -45,13 +45,12 @@ def estimate_flat(
     flat, metro_le_encoder = encode_with_OneHotEncoder_and_delete_column(flat,'underground')
     flat, house_type_le_encoder = encode_with_OneHotEncoder_and_delete_column(flat,'house_type')
     flat, repair_le_encoder = encode_with_OneHotEncoder_and_delete_column(flat,'repair')
-    clf = joblib.load('model_random_forest.pkl')
+    clf = joblib.load('/home/olga/git/underpriced/ml_module/model_random_forest.pkl')
     
-    df = pd.read_csv('flats_features.csv')
+    df = pd.read_csv('/home/olga/git/underpriced/ml_module/flats_features.csv')
     df = df.drop(['price'], axis=1)
     df = df[:1]
     df = df.drop(df.index[0])
     df = df.append(flat)
     df = df.fillna(0)
-    print(clf.predict(df).tolist())
     return clf.predict(df).tolist()
