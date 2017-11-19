@@ -84,7 +84,10 @@ class CianSpiderV2(scrapy.Spider):
         return None
 
     def extract_flat_rooms_count(self, response):
-        line = response.xpath('//h2[@class="cf_sticky_head-head"]/text()').extract()[0].strip()
+        extraction = response.xpath('//h2[@class="cf_sticky_head-head"]/text()').extract()
+        if len(extraction) == 0:
+            return None
+        line = extraction[0].strip()
         value = line.split('-', 2)[0]
         return self.cleanup_string(value)
 
@@ -92,7 +95,10 @@ class CianSpiderV2(scrapy.Spider):
         return response.xpath('//div[@class="fotorama"]/img/@src').extract()
 
     def extract_flat_description(self, response):
-        return response.xpath('//div[@class="object_descr_text"]/text()').extract()[0].strip()
+        extraction = response.xpath('//div[@class="object_descr_text"]/text()').extract()
+        if len(extraction) == 0:
+            return None
+        return extraction[0].strip()
 
     def fix_flat_data(self, flat):
         flat['kitchen_area'].replace(',', '.')
@@ -116,11 +122,16 @@ class CianSpiderV2(scrapy.Spider):
             return district.group(1)
         return ''
 
+    def extract_flat_address(self, response):
+        return ', '.join(response.xpath('//h1[@class="object_descr_addr"]/a/text()').extract()[-2:])
+
     def get_id(self, response):
         return response.url.rsplit('/', 2)[1]
 
     def parse_flat(self, response):
-        flat = {}
+        if 'captcha' in response.url:
+            return
+        flat = dict()
         flat['url'] = response.url
         flat['_id'] = self.get_id(response)
         flat['price'] = self.extract_flat_price(response)
@@ -129,6 +140,7 @@ class CianSpiderV2(scrapy.Spider):
         flat['description'] = self.extract_flat_description(response)
         flat['underground'] = self.extract_flat_underground(response)
         flat['district'] = self.extract_flat_district(response)
+        flat['address'] = self.extract_flat_address(response)
         flat.update(self.extract_flat_additional_data(response))
         if flat['price'] is not None:
             yield flat
