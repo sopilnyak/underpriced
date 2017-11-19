@@ -274,4 +274,9 @@
         font-size: 13px;
     }
 
+    .pagination-block {
+        width: 100%;
+        overflow: hidden;
+    }
+
 </style>

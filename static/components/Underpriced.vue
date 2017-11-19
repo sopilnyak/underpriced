@@ -45,9 +45,7 @@
                             жилая: {{ flat.living_area }} кв. м)</span><br>
                         <span class="area-hint">Этаж:</span>
                         <span class="floor">{{ flat.floor }}</span><br>
-                        <span v-if="flat.view !== undefined" class="external">
-                            Вид из окна: {{ flat.view }}
-                        </span><br>
+                        <span class="external">{{ flat.address }}</span><br>
                     </div>
                     <div class="third-column">
                         <span class="actual-price">{{ flat.price.rub_price }}</span>
@@ -61,7 +59,7 @@
                     <br>
                 </div>
             </paginate>
-            <paginate-links for="flats" :show-step-links="true"
+            <paginate-links class="pagination-block" for="flats" :show-step-links="true"
                             :step-links="{
                                 next: 'Вперед',
                                 prev: 'Назад'
@@ -112,9 +110,14 @@
                                 if (flat[field] === null) {
                                     filter = false;
                                 }
-                                if (flat.hasOwnProperty(field)) {
-                                    filter = filter && flat[field].toString().toLowerCase()
+                                if (field === 'underground' && Object.keys(flat.underground)[0] !== undefined) {
+                                    filter = filter && Object.keys(flat.underground)[0].toString().toLowerCase()
                                         .indexOf(this_.filterQueries[field].toLowerCase()) !== -1;
+                                } else {
+                                    if (flat.hasOwnProperty(field)) {
+                                        filter = filter && flat[field].toString().toLowerCase()
+                                            .indexOf(this_.filterQueries[field].toLowerCase()) !== -1;
+                                    }
                                 }
                             });
                             return filter;
