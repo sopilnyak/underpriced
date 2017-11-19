@@ -263,10 +263,7 @@
     }
 
     .sort-container {
-        padding: 0.3em 0 0 3em;
-        color: #F3F3FC;
-        float: left;
-        width: 50%;
+        padding: 0.3em 0 0 0.5em;
         height: 2em;
         font-weight: bold;
         cursor: pointer;
@@ -274,7 +271,6 @@
 
     .filter {
         padding: 3px;
-        color: #F3F3FC;
         font-size: 13px;
     }
 

@@ -41,7 +41,6 @@ def estimate_flat(request):
             'total_floor'
         ]
         flat = {field: request.POST[field] for field in fields}
-        print(flat)
         price = ml_estimate_flat(**flat)
         return JsonResponse({'price': price[0]})
     else:

@@ -15,6 +15,10 @@
             </select>
             <input v-model="filterQueries['underground']" placeholder="Поиск по метро...">
             <input v-model="filterQueries['address']" placeholder="Поиск по адресу...">
+            <span class="sort-container">
+                <span @click="changeSortDirection">Сортировать по цене</span>
+                <span @click="changeSortDirection" class="filter"> {{ sortDirectionSign }} </span>
+            </span>
 
             <paginate
                     name="flats"
@@ -78,7 +82,8 @@
                     underground: "",
                     address: ""
                 },
-                paginate: ['flats']
+                paginate: ['flats'],
+                sortDirection: -1,
             }
         },
         created() {
@@ -108,6 +113,29 @@
                             return filter;
                         }
                     )
+                    .sort(
+                        function (a, b) {
+                            let value1 = parseInt(a.price);
+                            let value2 = parseInt(b.price);
+
+                            if (value1 === null || value2 === null || value1 === value2) {
+                                return this_.sortDirection
+                            }
+                            return ((value1 < value2) ? -1 : 1) * this_.sortDirection;
+                        }
+                    );
+            },
+            sortDirectionSign() {
+                if (this.sortDirection === 1) {
+                    return '▲'
+                } else {
+                    return '▼';
+                }
+            },
+        },
+        methods: {
+            changeSortDirection() {
+                this.sortDirection *= -1
             },
         },
     }

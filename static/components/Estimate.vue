@@ -130,7 +130,10 @@
                 <a @click.prevent="postEstimate" target="_blank" class="button button-estimate">Оценить</a>
             </div>
             <div v-if="hasFormErrors" class="error-message-big">Пожалуйста, проверьте форму на ошибки.</div>
-            <div v-if="isEstimated" class="price">
+            <div v-if="isEstimating">
+                <g-loading></g-loading>
+            </div>
+            <div v-if="isEstimated && !isEstimating" class="price">
                 <span class="price-text">Предсказанная цена:</span>
                 <span class="price-number">{{ estimatedPrice }} рублей</span>
             </div>
@@ -155,6 +158,7 @@
                 isSubwaySelected: null,
                 estimatedPrice: null,
                 hasFormErrors: false,
+                isEstimating: false,
             }
         },
         created() {
@@ -214,6 +218,7 @@
                         this_.hasFormErrors = true;
                         return;
                     }
+                    this_.isEstimating = true;
                     this_.hasFormErrors = false;
                     $.ajax({
                         url: '/flats/estimate/',
@@ -234,9 +239,11 @@
                             total_floor: this.$refs.total_floor.value
                         },
                         success: function (response) {
+                            this_.isEstimating = false;
                             this_.estimatedPrice = Math.round(response.price * 100) / 100;
                         },
                         error: function (jqXHR, e) {
+                            this_.isEstimating = false;
                             console.log('Estimating error');
                         }
                     });

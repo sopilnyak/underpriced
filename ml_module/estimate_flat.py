@@ -1,6 +1,7 @@
 from .features_extractor import centered_subways, encode_with_OneHotEncoder_and_delete_column, encode_with_LabelEncoder, perform_coding_and_delete_column
 from sklearn.externals import joblib
 import pandas as pd
+import os
 
 def has_to_int(feature):
     if feature in ['Да', 'да']:
@@ -40,14 +41,16 @@ def estimate_flat(
     'total_floor': int(total_floor),
     'is_center': underground.lower() in centered_subways_lower
     }
+
+    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     
     flat = pd.DataFrame(features, index=[0])
     flat, metro_le_encoder = encode_with_OneHotEncoder_and_delete_column(flat,'underground')
     flat, house_type_le_encoder = encode_with_OneHotEncoder_and_delete_column(flat,'house_type')
     flat, repair_le_encoder = encode_with_OneHotEncoder_and_delete_column(flat,'repair')
-    clf = joblib.load('model_random_forest.pkl')
+    clf = joblib.load(os.path.join(BASE_DIR, 'ml_module/model_random_forest.pkl'))
     
-    df = pd.read_csv('flats_features.csv')
+    df = pd.read_csv(os.path.join(BASE_DIR, 'ml_module/flats_features.csv'))
     df = df.drop(['price'], axis=1)
     df = df[:1]
     df = df.drop(df.index[0])

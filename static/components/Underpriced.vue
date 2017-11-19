@@ -4,7 +4,7 @@
             <g-loading></g-loading>
         </div>
         <div v-else class="filters">
-            <select v-model="filterQueries['rooms_number']">
+            <select v-model="filterQueries['rooms']">
                 <option selected value="">Кол-во комнат</option>
                 <option value="1">1</option>
                 <option value="2">2</option>
@@ -15,10 +15,10 @@
             </select>
             <input v-model="filterQueries['underground']" placeholder="Поиск по метро...">
             <input v-model="filterQueries['address']" placeholder="Поиск по адресу...">
-            <div class="sort-container">
+            <span class="sort-container">
                 <span @click="changeSortDirection">Сортировать по цене</span>
                 <span @click="changeSortDirection" class="filter"> {{ sortDirectionSign }} </span>
-            </div>
+            </span>
 
             <paginate
                     name="flats"
@@ -29,9 +29,9 @@
                         <div :style="{ backgroundImage: 'url(' + flat.images[0] + ')' }" class="flat-image"></div>
                     </div>
                     <div class="first-column">
-                        <span class="subway">м. {{ flat.underground }}</span><br>
-                        <span class="location">{{ flat.underground_distance }} мин. от метро</span><br>
-                        <!-- <span class="district">район {{ flat.district }}</span> -->
+                        <span class="subway">м. {{ Object.keys(flat.underground)[0] }}</span><br>
+                        <span class="location">{{ flat.underground[Object.keys(flat.underground)[0]] }}</span><br>
+                        <span v-if="flat.district !== ''" class="district">район: {{ flat.district }}</span>
                     </div>
                     <div class="second-column">
                         <span v-if="flat.rooms === -1" class="rooms">Студия,</span>
@@ -43,9 +43,11 @@
                         <span class="area-hint">кв. м
                             (кухня: {{ flat.kitchen_area }} кв. м,
                             жилая: {{ flat.living_area }} кв. м)</span><br>
-                        <span class="floor">{{ flat.floor }}</span>
-                        <span class="area-hint">этаж</span><br>
-                        <span class="external">{{ flat.description }}</span><br>
+                        <span class="area-hint">Этаж:</span>
+                        <span class="floor">{{ flat.floor }}</span><br>
+                        <span v-if="flat.view !== undefined" class="external">
+                            Вид из окна: {{ flat.view }}
+                        </span><br>
                     </div>
                     <div class="third-column">
                         <span class="actual-price">{{ flat.price.rub_price }}</span>
@@ -83,7 +85,7 @@
                 filterSubway: "",
                 filterDistrict: "",
                 filterQueries: {
-                    rooms_number: "",
+                    rooms: "",
                     underground: "",
                     address: ""
                 },
