@@ -144,7 +144,7 @@
 
 <script>
     import GLoading from "./GLoading.vue"
-    import ru from 'vee-validate/dist/locale/ru';
+    import ru from '../resources/validation.js';
 
     export default {
         name: 'Estimate',
