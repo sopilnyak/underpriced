@@ -8,6 +8,8 @@
 
     <link rel="shortcut icon" type="image/png" href="{% static "icons/ur_cyan.png" %}"/>
     <script src="http://code.jquery.com/jquery-latest.min.js" charset="utf-8"></script>
+    {% csrf_token %}
+    <script type="text/javascript" src="{% static "csrf_ajax.js" %}"></script>
 
     <!-- Load static fonts -->
     <style>

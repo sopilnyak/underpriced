@@ -21,7 +21,9 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', views.index),
-    #url(r'^api/underpriced', views.index),
+    url(r'^flats/$', views.get_flat_list),
+    url(r'^flats/([0-9]+)/$', views.get_flat),
+    url(r'^flats/estimate/$', views.estimate_flat),
 ]
 
 urlpatterns += staticfiles_urlpatterns()

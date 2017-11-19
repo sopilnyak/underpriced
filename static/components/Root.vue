@@ -262,4 +262,21 @@
         margin-top: 3px;
     }
 
+    .sort-container {
+        padding: 0.3em 0 0 0.5em;
+        height: 2em;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .filter {
+        padding: 3px;
+        font-size: 13px;
+    }
+
+    .pagination-block {
+        width: 100%;
+        overflow: hidden;
+    }
+
 </style>
