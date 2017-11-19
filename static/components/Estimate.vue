@@ -214,6 +214,7 @@
                         this_.hasFormErrors = true;
                         return;
                     }
+                    this_.hasFormErrors = false;
                     $.ajax({
                         url: '/flats/estimate/',
                         type: 'POST',
