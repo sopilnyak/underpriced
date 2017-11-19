@@ -35,6 +35,7 @@ export default new Vuex.Store({
             $.ajax({
                 url: '/static/data/flats.json',
                 type: 'GET',
+                dataType: 'json',
                 success: function (response) {
                     commit('setOverpriced', response);
                 },

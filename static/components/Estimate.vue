@@ -8,8 +8,11 @@
                 Введите параметры своей квартиры, и мы оценим примерную стоимость ее аренды.
             </div>
             <form class="estimate-input">
-                <input v-on:keyup.enter="postEstimate" placeholder="Метро..."
-                       v-model="filterSubway" ref="underground" class="underground">
+                <div class="input-block underground">
+                    <div class="input-label">Метро</div>
+                    <input v-on:keyup.enter="postEstimate"
+                           v-model="filterSubway" ref="underground" class="underground-input">
+                </div>
                 <div class="subway-list"
                      :class="{ 'subway-list-hidden': this.filterSubway === '' || this.isSubwaySelected !== null }" >
                     <div v-for="subway in subwayList" class="subway-list-entry"
@@ -17,55 +20,86 @@
                         {{ subway.name }}
                     </div>
                 </div>
-                <select ref="rooms" class="rooms">
-                    <option selected>Кол-во комнат</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="студия">Студия</option>
-                </select>
-                <input v-on:keyup.enter="postEstimate" placeholder="Общая площадь"
-                       ref="area" class="area">
-                <input v-on:keyup.enter="postEstimate" placeholder="Площадь кухни"
-                       ref="kitchen_area" class="kitchen-area">
-                <input v-on:keyup.enter="postEstimate" placeholder="Жилая площадь"
-                       ref="living_area" class="living-area">
-                <select ref="repair" class="repair">
-                    <option selected>Ремонт</option>
-                    <option value="косметический">Косметический</option>
-                    <option value="евроремонт">Евроремонт</option>
-                    <option value="дизайнерский">Дизайнерский</option>
-                    <option value="отсутствует">Отсутствует</option>
-                </select>
+                <div class="input-block">
+                    <div class="input-label rooms">Кол-во комнат</div>
+                    <select ref="rooms" class="rooms-input">
+                        <option value="1" selected>1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="студия">Студия</option>
+                    </select>
+                </div>
+                <div class="input-block">
+                    <div class="input-label area">Общая площадь, кв. м.</div>
+                    <input v-on:keyup.enter="postEstimate" class="area-input"
+                           ref="area">
+                </div>
+                <div class="input-block kitchen-area">
+                    <div class="input-label">Площадь кухни, кв. м.</div>
+                    <input v-on:keyup.enter="postEstimate" class="kitchen-area-input"
+                           ref="kitchen_area">
+                </div>
+                <div class="input-block living-area">
+                    <div class="input-label">Жилая площадь, кв. м.</div>
+                    <input v-on:keyup.enter="postEstimate" class="living-area-input"
+                           ref="living_area">
+                </div>
+                <div class="input-block repair">
+                    <div class="input-label">Ремонт</div>
+                    <select ref="repair" class="repair-input">
+                        <option selected></option>
+                        <option value="косметический">Косметический</option>
+                        <option value="евроремонт">Евроремонт</option>
+                        <option value="дизайнерский">Дизайнерский</option>
+                        <option value="отсутствует">Отсутствует</option>
+                    </select>
+                </div>
                 <br>
-                <select ref="has_balcony" class="has-balcony">
-                    <option selected>Наличие балкона</option>
-                    <option value="да">Да</option>
-                    <option value="нет">Нет</option>
-                </select>
-                <select ref="has_loggia" class="has-loggia">
-                    <option selected>Наличие лоджии</option>
-                    <option value="да">Да</option>
-                    <option value="нет">Нет</option>
-                </select>
-                <input v-on:keyup.enter="postEstimate" placeholder="Этаж"
-                       ref="curr_floor" class="curr-floor">
-                <input v-on:keyup.enter="postEstimate" placeholder="Этажей в доме"
-                       ref="total_floor" class="total-floor">
-                <input v-on:keyup.enter="postEstimate" placeholder="Год постройки дома"
-                       ref="construction_year" class="construction-year">
-                <select ref="house_type" class="house-type">
-                    <option selected>Тип дома</option>
-                    <option value="панельный">Панельный</option>
-                    <option value="блочный">Блочный</option>
-                    <option value="кирпичный">Кирпичный</option>
-                    <option value="монолитный">Монолитный</option>
-                    <option value="кирпично-монолитный">Кирпично-монолитный</option>
-                    <option value="сталинский">Сталинский</option>
-                    <option value="старый фонд">Старый фонд</option>
-                </select>
+                <div class="input-block has-balcony">
+                    <div class="input-label">Наличие балкона</div>
+                    <select ref="has_balcony" class="has-balcony-input">
+                        <option value="да" selected>Да</option>
+                        <option value="нет">Нет</option>
+                    </select>
+                </div>
+                <div class="input-block has-loggia">
+                    <div class="input-label">Наличие лоджии</div>
+                    <select ref="has_loggia" class="has-loggia-input">
+                        <option value="да">Да</option>
+                        <option value="нет" selected>Нет</option>
+                    </select>
+                </div>
+                <div class="input-block curr-floor">
+                    <div class="input-label">Этаж</div>
+                    <input v-on:keyup.enter="postEstimate" class="curr-floor-input"
+                           ref="curr_floor">
+                </div>
+                <div class="input-block total-floor">
+                    <div class="input-label">Этажей в доме</div>
+                    <input v-on:keyup.enter="postEstimate" class="total-floor-input"
+                           ref="total_floor">
+                </div>
+                <div class="input-block construction-year">
+                    <div class="input-label">Год постройки дома</div>
+                    <input v-on:keyup.enter="postEstimate" class="construction-year-input"
+                           ref="construction_year">
+                </div>
+                <div class="input-block house-type">
+                    <div class="input-label">Тип дома</div>
+                    <select ref="house_type" class="house-type-input">
+                        <option selected></option>
+                        <option value="панельный">Панельный</option>
+                        <option value="блочный">Блочный</option>
+                        <option value="кирпичный">Кирпичный</option>
+                        <option value="монолитный">Монолитный</option>
+                        <option value="кирпично-монолитный">Кирпично-монолитный</option>
+                        <option value="сталинский">Сталинский</option>
+                        <option value="старый фонд">Старый фонд</option>
+                    </select>
+                </div>
+                <br>
             </form>
             <div class="post-estimate">
                 <a @click.prevent="postEstimate" target="_blank" class="button button-estimate">Оценить</a>
@@ -116,7 +150,7 @@
                     )
             },
             isEstimated() {
-                return this.estimatedPrice;
+                return this.estimatedPrice !== null;
             }
         },
         methods: {
@@ -134,27 +168,27 @@
                 });
             },
             postEstimate() {
-                let flat = {
-                    area: this.$refs.area.value,
-                    combined_bathroom_count: this.$refs.area.combined_bathroom_count,
-                    construction_year: this.$refs.construction_year.value,
-                    house_type: this.$refs.house_type.value,
-                    kitchen_area: this.$refs.kitchen_area.value,
-                    living_area: this.$refs.living_area.value,
-                    repair: this.$refs.repair.value,
-                    rooms: this.$refs.rooms.value,
-                    underground: this.$refs.underground.value,
-                    has_balcony: this.$refs.has_balcony.value,
-                    has_loggia: this.$refs.has_loggia.value,
-                    curr_floor: this.$refs.curr_floor.value,
-                    total_floor: this.$refs.total_floor.value
-                };
+                let this_ = this;
                 $.ajax({
                     url: '/flats/estimate/',
                     type: 'POST',
-                    data: flat,
+                    data: {
+                        area: this.$refs.area.value,
+                        combined_bathroom_count: 1,
+                        construction_year: this.$refs.construction_year.value,
+                        house_type: this.$refs.house_type.value,
+                        kitchen_area: this.$refs.kitchen_area.value,
+                        living_area: this.$refs.living_area.value,
+                        repair: this.$refs.repair.value,
+                        rooms: this.$refs.rooms.value,
+                        underground: this.$refs.underground.value,
+                        has_balcony: this.$refs.has_balcony.value,
+                        has_loggia: this.$refs.has_loggia.value,
+                        curr_floor: this.$refs.curr_floor.value,
+                        total_floor: this.$refs.total_floor.value
+                    },
                     success: function (response) {
-                        alert(response);
+                        this_.estimatedPrice = Math.round(response.price * 100) / 100;
                     },
                     error: function (jqXHR, e) {
                         //console.log('Unable to load overpriced' + e);
@@ -188,8 +222,10 @@
     .subway-list {
         position: absolute;
         left: 140px;
+        margin-top: 65px;
         max-height: 300px;
         overflow: hidden;
+        width: 13.4em;
     }
     .header {
         font-size: 20px;
@@ -208,7 +244,7 @@
     }
     .price {
         margin-top: 20px;
-        text-align: center;
+        margin-left: 100px;
         font-size: 30px;
     }
     .pre-footer {
@@ -219,7 +255,6 @@
     }
     .subway-list-entry {
         padding: 5px 10px;
-        width: 160px;
         overflow: hidden;
         background: #CCD2DD;
         border-bottom: 1px solid #010B20;
@@ -235,37 +270,85 @@
         margin-left: 100px;
         margin-right: 100px;
     }
-    .estimate-input input {
-        margin-top: 20px;
-    }
-    .estimate-input select {
-        margin-top: 20px;
-    }
     .underground {
-        width: 10.5em;
+        width: 14em;
     }
-    .area {
-        width: 8em;
-    }
-    .kitchen-area {
-        width: 8em;
-    }
-    .living-area {
-        width: 8em;
-    }
-    .curr-floor {
-        width: 5.3em;
-    }
-    .total-floor {
-        width: 8em;
-    }
-    .has-balcony {
-        width: 12em;
+    .underground-input {
+        width: 11em !important;
     }
     .rooms {
+        width: 12em;
+    }
+    .area {
+        width: 13em;
+    }
+    .area-input {
+        width: 7em !important;
+    }
+    .kitchen-area {
+        width: 10em;
+    }
+    .kitchen-area-input {
+        width: 7em;
+    }
+    .living-area {
+        width: 10em;
+    }
+    .living-area-input {
+        width: 7em;
+    }
+    .repair {
         width: 11em;
     }
-    .has-loggia {
+    .repair-input {
         width: 11em;
+    }
+    .has-balcony {
+        width: 14em;
+    }
+    .has-balcony-input {
+        width: 12.4em !important;
+    }
+    .has-loggia {
+        width: 12.1em;
+    }
+    .curr-floor {
+        width: 9.8em;
+    }
+    .curr-floor-input {
+        width: 7em !important;
+    }
+    .total-floor {
+        width: 9.9em;
+    }
+    .total-floor-input {
+        width: 7em;
+    }
+    .construction-year {
+        width: 10em;
+    }
+    .construction-year-input {
+        width: 7em !important;
+    }
+    .house-type {
+        width: 11em;
+    }
+    .house-type-input {
+        width: 11em;
+    }
+    .input-block {
+        margin-top: 15px;
+        float: left;
+    }
+    .input-label {
+        margin-bottom: 5px;
+        margin-left: 1px;
+        font-size: 11px;
+        width: inherit;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    br {
+        clear: both;
     }
 </style>

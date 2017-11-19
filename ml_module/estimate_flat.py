@@ -3,7 +3,7 @@ from sklearn.externals import joblib
 import pandas as pd
 
 def has_to_int(feature):
-    if feature in ['Да', ' да']:
+    if feature in ['Да', 'да']:
         return 1
     else:
         return 0
@@ -22,7 +22,7 @@ def estimate_flat(
         has_loggia,      
         curr_floor,            
         total_floor):
-    
+
     centered_subways_lower = [item.lower() for item in centered_subways]
     features = {
     'area': float(area),
@@ -45,7 +45,7 @@ def estimate_flat(
     flat, metro_le_encoder = encode_with_OneHotEncoder_and_delete_column(flat,'underground')
     flat, house_type_le_encoder = encode_with_OneHotEncoder_and_delete_column(flat,'house_type')
     flat, repair_le_encoder = encode_with_OneHotEncoder_and_delete_column(flat,'repair')
-    clf = joblib.load('model_random_forest.pkl') 
+    clf = joblib.load('model_random_forest.pkl')
     
     df = pd.read_csv('flats_features.csv')
     df = df.drop(['price'], axis=1)
@@ -53,4 +53,5 @@ def estimate_flat(
     df = df.drop(df.index[0])
     df = df.append(flat)
     df = df.fillna(0)
-    return clf.predict(df)
+    print(clf.predict(df).tolist())
+    return clf.predict(df).tolist()

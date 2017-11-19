@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponseBadRequest
 from core.database import get_client
-from ml_module.estimate_flat import estimate_flat
+from ml_module.estimate_flat import estimate_flat as ml_estimate_flat
 
 client = get_client()
 db = client.underpriced
@@ -41,8 +41,9 @@ def estimate_flat(request):
             'total_floor'
         ]
         flat = {field: request.POST[field] for field in fields}
-        price = estimate_flat(*flat)
-        return JsonResponse({'price': price})
+        print(flat)
+        price = ml_estimate_flat(**flat)
+        return JsonResponse({'price': price[0]})
     else:
         return HttpResponseBadRequest()
 

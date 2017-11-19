@@ -24,7 +24,6 @@ urlpatterns = [
     url(r'^flats/$', views.get_flat_list),
     url(r'^flats/([0-9]+)/$', views.get_flat),
     url(r'^flats/estimate/$', views.estimate_flat),
-    #url(r'^api/underpriced', views.index),
 ]
 
 urlpatterns += staticfiles_urlpatterns()
