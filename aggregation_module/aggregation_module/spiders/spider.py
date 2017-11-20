@@ -49,6 +49,10 @@ class CianSpiderV2(scrapy.Spider):
     def cleanup_string(string):
         return string.replace('\xa0', ' ').replace('м2', '').strip()
 
+    @staticmethod
+    def fix_float(string):
+        return string.replace(',', '.')
+
     def extract_flat_additional_data(self, response):
         attribute_names = map(
             lambda name: ATTRIBUTE_REPLACEMENT[name.strip()[:-1]],
@@ -59,6 +63,10 @@ class CianSpiderV2(scrapy.Spider):
             response.xpath('//table[@class="object_descr_props"]/tr/td')
         )
         data = dict(zip(attribute_names, attribute_values))
+
+        for field in ['area', 'living_area', 'kitchen_area']:
+            if field in data:
+                data[field] = self.fix_float(data[field])
 
         return data
 
@@ -142,5 +150,5 @@ class CianSpiderV2(scrapy.Spider):
         flat['district'] = self.extract_flat_district(response)
         flat['address'] = self.extract_flat_address(response)
         flat.update(self.extract_flat_additional_data(response))
-        if flat['price'] is not None:
+        if flat['price'] is not None and len(flat['underground']) > 0:
             yield flat
