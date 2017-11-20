@@ -5,9 +5,7 @@ import os
 import numpy as np
 import json
 
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-HARD_PRICE = 30000
 
 def has_to_int(feature):
     if feature in ['Да', 'да']:
@@ -68,14 +66,15 @@ def estimate_flat(
     clf = joblib.load(os.path.join(BASE_DIR, 'ml_module/model_random_forest.pkl'))
     
     columns = []
-    with open(os.path.join(BASE_DIR, 'ml_module/flats_features.csv'), 'r') as f:
-        columns = np.array(f.readline().split(','))
+    with open(os.path.join(BASE_DIR, 'ml_module/features.json'), 'r') as f:
+        columns = np.array(json.loads(f.readline())['features'])
 
     columns = np.delete(columns, np.argwhere(columns=='price'))
-    with open(os.path.join(BASE_DIR, 'ml_module/features.json'), 'w') as outfile:
-        all_columns = {}
-        all_columns['features'] = columns.tolist()
-        json.dump(all_columns, outfile)
+
+    # with open(os.path.join(BASE_DIR, 'ml_module/features.json'), 'w') as outfile:
+    #     all_columns = {}
+    #     all_columns['features'] = columns.tolist()
+    #     json.dump(all_columns, outfile)
 
     flat = pd.DataFrame(columns=columns)
     flat = flat.append(data)
@@ -86,5 +85,5 @@ def estimate_flat(
     try:
         price = round(clf.predict(flat).tolist()[0])
     except:
-        price = HARD_PRICE
+        raise NameError('SmthWentWrong')
     return price
