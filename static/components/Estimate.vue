@@ -15,12 +15,12 @@
                     <span v-show="errors.has('underground')" class="error-message">
                         {{ errors.first('underground') }}
                     </span>
-                </div>
-                <div class="subway-list"
-                     :class="{ 'subway-list-hidden': this.filterSubway === '' || this.isSubwaySelected !== null }" >
-                    <div v-for="subway in subwayList" class="subway-list-entry"
-                         @click="selectSubway(subway.name)">
-                        {{ subway.name }}
+                    <div class="subway-list"
+                         :class="{ 'subway-list-hidden': this.filterSubway === '' || this.isSubwaySelected !== null }" >
+                        <div v-for="subway in subwayList" class="subway-list-entry"
+                             @click="selectSubway(subway.name)">
+                            {{ subway.name }}
+                        </div>
                     </div>
                 </div>
                 <div class="input-block">
@@ -46,7 +46,7 @@
                 <div class="input-block kitchen-area">
                     <div class="input-label">Площадь кухни, кв. м.</div>
                     <input v-on:keyup.enter="postEstimate" class="kitchen-area-input"
-                           v-validate="{ required: true, regex: /^\d*[\.\,]?\d*$/ }" name="kitchen-area"
+                           v-validate="{ regex: /^\d*[\.\,]?\d*$/ }" name="kitchen-area"
                            ref="kitchen_area">
                     <span v-show="errors.has('kitchen-area')" class="error-message">
                         {{ errors.first('kitchen-area') }}
@@ -55,7 +55,7 @@
                 <div class="input-block living-area">
                     <div class="input-label">Жилая площадь, кв. м.</div>
                     <input v-on:keyup.enter="postEstimate" class="living-area-input"
-                           v-validate="{ required: true, regex: /^\d*[\.\,]?\d*$/ }" name="living-area"
+                           v-validate="{ regex: /^\d*[\.\,]?\d*$/ }" name="living-area"
                            ref="living_area">
                     <span v-show="errors.has('living-area')" class="error-message">
                         {{ errors.first('living-area') }}
@@ -88,7 +88,7 @@
                 <div class="input-block curr-floor">
                     <div class="input-label">Этаж</div>
                     <input v-on:keyup.enter="postEstimate" class="curr-floor-input"
-                           v-validate="{ required: true, numeric: true }" name="curr-floor"
+                           v-validate="{ numeric: true }" name="curr-floor"
                            ref="curr_floor">
                     <span v-show="errors.has('curr-floor')" class="error-message">
                         {{ errors.first('curr-floor') }}
@@ -97,7 +97,7 @@
                 <div class="input-block total-floor">
                     <div class="input-label">Этажей в доме</div>
                     <input v-on:keyup.enter="postEstimate" class="total-floor-input"
-                           v-validate="{ required: true, numeric: true, min_value: this.getFilledCurrFloor() }"
+                           v-validate="{ numeric: true, min_value: this.getFilledCurrFloor() }"
                            name="total-floor" ref="total_floor">
                     <span v-show="errors.has('total-floor')" class="error-message">
                         {{ errors.first('total-floor') }}
@@ -106,7 +106,7 @@
                 <div class="input-block construction-year">
                     <div class="input-label">Год постройки дома</div>
                     <input v-on:keyup.enter="postEstimate" class="construction-year-input"
-                           v-validate="{ required: true, numeric: true, max_value: this.getCurrentYear() }"
+                           v-validate="{ numeric: true, max_value: this.getCurrentYear() }"
                            name="construction-year" ref="construction_year">
                     <span v-show="errors.has('construction-year')" class="error-message">
                         {{ errors.first('construction-year') }}
@@ -130,6 +130,7 @@
                 <a @click.prevent="postEstimate" target="_blank" class="button button-estimate">Оценить</a>
             </div>
             <div v-if="hasFormErrors" class="error-message-big">Пожалуйста, проверьте форму на ошибки.</div>
+            <div v-if="hasBackendErrors" class="error-message-big">Что-то пошло не так. Попробуйте еще раз.</div>
             <div v-if="isEstimating">
                 <g-loading></g-loading>
             </div>
@@ -159,6 +160,7 @@
                 estimatedPrice: null,
                 hasFormErrors: false,
                 isEstimating: false,
+                hasBackendErrors: false,
             }
         },
         created() {
@@ -219,6 +221,7 @@
                         return;
                     }
                     this_.isEstimating = true;
+                    this_.hasBackendErrors = false;
                     this_.hasFormErrors = false;
                     $.ajax({
                         url: '/flats/estimate/',
@@ -244,7 +247,7 @@
                         },
                         error: function (jqXHR, e) {
                             this_.isEstimating = false;
-                            console.log('Estimating error');
+                            this_.hasBackendErrors = true;
                         }
                     });
                 });
@@ -283,11 +286,9 @@
     }
     .subway-list {
         position: absolute;
-        left: 140px;
-        margin-top: 65px;
         max-height: 300px;
         overflow: hidden;
-        width: 13.4em;
+        width: 13.3em;
     }
     .header {
         font-size: 20px;
@@ -296,7 +297,7 @@
         margin-bottom: 10px;
     }
     .button-estimate {
-        width: 200px;
+        width: 11.7em;
         text-align: center;
     }
     .post-estimate {
