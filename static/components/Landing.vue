@@ -88,6 +88,7 @@
         color: #EDEFF1;
         background: -webkit-linear-gradient(to right, #072050, #375084, #072050);
         background: linear-gradient(to right, #072050, #375084, #072050);
+        box-shadow: inset 0 0 20px rgba(0,0,0,0.3);
     }
 
     .landing-button {
