@@ -150,5 +150,5 @@ class CianSpiderV2(scrapy.Spider):
         flat['district'] = self.extract_flat_district(response)
         flat['address'] = self.extract_flat_address(response)
         flat.update(self.extract_flat_additional_data(response))
-        if flat['price'] is not None and len(flat['underground']) > 0:
+        if flat['price'] is not None and len(flat['underground']) > 0 and 'rub_price' in flat['price']:
             yield flat
