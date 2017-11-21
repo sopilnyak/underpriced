@@ -37,7 +37,7 @@
                 <div class="input-block area">
                     <div class="input-label">Общая площадь, кв. м.</div>
                     <input v-on:keyup.enter="postEstimate" class="area-input"
-                           v-validate="{ required: true, regex: /^\d*[\.\,]?\d*$/ }" name="area"
+                           v-validate="{ required: true, regex: /^\d*[\.\,]?\d*$/, not_in: [0] }" name="area"
                            ref="area">
                     <span v-show="errors.has('area')" class="error-message">
                         {{ errors.first('area') }}
@@ -46,7 +46,7 @@
                 <div class="input-block kitchen-area">
                     <div class="input-label">Площадь кухни, кв. м.</div>
                     <input v-on:keyup.enter="postEstimate" class="kitchen-area-input"
-                           v-validate="{ regex: /^\d*[\.\,]?\d*$/ }" name="kitchen-area"
+                           v-validate="{ regex: /^\d*[\.\,]?\d*$/, max_value: this.getArea() }" name="kitchen-area"
                            ref="kitchen_area">
                     <span v-show="errors.has('kitchen-area')" class="error-message">
                         {{ errors.first('kitchen-area') }}
@@ -55,7 +55,7 @@
                 <div class="input-block living-area">
                     <div class="input-label">Жилая площадь, кв. м.</div>
                     <input v-on:keyup.enter="postEstimate" class="living-area-input"
-                           v-validate="{ regex: /^\d*[\.\,]?\d*$/ }" name="living-area"
+                           v-validate="{ regex: /^\d*[\.\,]?\d*$/, max_value: this.getArea() }" name="living-area"
                            ref="living_area">
                     <span v-show="errors.has('living-area')" class="error-message">
                         {{ errors.first('living-area') }}
@@ -88,7 +88,7 @@
                 <div class="input-block curr-floor">
                     <div class="input-label">Этаж</div>
                     <input v-on:keyup.enter="postEstimate" class="curr-floor-input"
-                           v-validate="{ numeric: true }" name="curr-floor"
+                           v-validate="{ numeric: true, not_in: [0] }" name="curr-floor"
                            ref="curr_floor">
                     <span v-show="errors.has('curr-floor')" class="error-message">
                         {{ errors.first('curr-floor') }}
@@ -97,7 +97,7 @@
                 <div class="input-block total-floor">
                     <div class="input-label">Этажей в доме</div>
                     <input v-on:keyup.enter="postEstimate" class="total-floor-input"
-                           v-validate="{ numeric: true, min_value: this.getFilledCurrFloor() }"
+                           v-validate="{ numeric: true, min_value: this.getFilledCurrFloor(), not_in: [0] }"
                            name="total-floor" ref="total_floor">
                     <span v-show="errors.has('total-floor')" class="error-message">
                         {{ errors.first('total-floor') }}
@@ -138,7 +138,6 @@
                 <span class="price-text">Предсказанная цена:</span>
                 <span class="price-number">{{ estimatedPrice }} рублей</span>
             </div>
-            <div class="pre-footer"></div>
         </div>
     </div>
 </template>
@@ -265,6 +264,9 @@
             },
             getFilledCurrFloor() {
                 return this.$refs.curr_floor === undefined ? 0 : this.$refs.curr_floor.value;
+            },
+            getArea() {
+                return this.$refs.area === undefined ? 0 : this.$refs.area.value;
             }
         },
         watch: {
@@ -308,9 +310,6 @@
         margin-top: 20px;
         margin-left: 100px;
         font-size: 30px;
-    }
-    .pre-footer {
-        margin-bottom: 350px;
     }
     .price-text {
         color: gray;
