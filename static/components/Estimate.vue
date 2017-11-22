@@ -16,7 +16,7 @@
                         {{ errors.first('underground') }}
                     </span>
                     <div class="subway-list"
-                         :class="{ 'subway-list-hidden': this.filterSubway === '' || this.isSubwaySelected !== null }" >
+                         :class="{ 'subway-list-hidden': this.filterSubway === '' || this.selectedSubway !== null }" >
                         <div v-for="subway in subwayList" class="subway-list-entry"
                              @click="selectSubway(subway.name)">
                             {{ subway.name }}
@@ -156,7 +156,7 @@
             return {
                 subways: null,
                 filterSubway: "",
-                isSubwaySelected: null,
+                selectedSubway: null,
                 estimatedPrice: null,
                 hasFormErrors: false,
                 isEstimating: false,
@@ -258,7 +258,7 @@
             },
             selectSubway(subway) {
                 this.filterSubway = subway;
-                this.isSubwaySelected = subway;
+                this.selectedSubway = subway;
             },
             getCurrentYear() {
                 return (new Date()).getFullYear();
@@ -274,20 +274,21 @@
                 this.$refs.construction_year.value = "";
                 this.$refs.kitchen_area.value = "";
                 this.$refs.living_area.value = "";
+                this.filterSubway = "";
                 this.$refs.underground.value = "";
                 this.$refs.curr_floor.value = "";
                 this.$refs.total_floor.value = "";
                 this.hasFormErrors = false;
                 this.isEstimating = false;
-                this.isEstimated = false;
-                this.hasBackendErrors = null;
+                this.estimatedPrice = null;
+                this.hasBackendErrors = false;
                 this.errors.clear();
             }
         },
         watch: {
             filterSubway: function (query) {
-                if (query !== this.isSubwaySelected) {
-                    this.isSubwaySelected = null;
+                if (query !== this.selectedSubway) {
+                    this.selectedSubway = null;
                 }
             }
         }
@@ -317,7 +318,7 @@
         width: 11.7em;
         text-align: center;
         margin-right: 0.5em;
-        margin-bottom: 3em;
+        margin-bottom: 1em;
     }
     .button-clear {
         width: 11.7em;
@@ -325,14 +326,13 @@
         background-color: rgba(140,154,182,0.41);
         border-color: rgba(140,154,182,0.31);
         color: inherit;
-        margin-bottom: 3em;
+        margin-bottom: 1em;
     }
     .post-estimate {
         margin-top: 20px;
         margin-left: 100px;
     }
     .price {
-        margin-top: 20px;
         margin-left: 100px;
         font-size: 30px;
     }
@@ -442,7 +442,6 @@
     }
     .error-message-big {
         color: red;
-        margin-top: 15px;
         margin-left: 100px;
     }
 </style>
