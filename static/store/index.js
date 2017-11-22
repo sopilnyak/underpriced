@@ -7,7 +7,7 @@ export default new Vuex.Store({
     state: {
         underpricedData: null,
         overpricedData: null,
-        active: 'underpriced',
+        active: 'landing',
     },
     mutations: {
         setUnderpriced(state, data) {

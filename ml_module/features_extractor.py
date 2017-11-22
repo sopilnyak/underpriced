@@ -9,6 +9,7 @@ import pandas as pd
 import numpy as np
 import json
 from sklearn.preprocessing import Imputer
+import json
 
 
 def get_nearest_undergroud(descr):
@@ -266,8 +267,8 @@ if __name__ == '__main__':
     # In[26]:
 
 
-    df['sleeping_place_count'].isnull().sum() # 3733 out of 3735
-    df = df.drop('sleeping_place_count', axis=1)
+    #df['sleeping_place_count'].isnull().sum() # 3733 out of 3735
+    #df = df.drop('sleeping_place_count', axis=1)
 
 
     # In[27]:
@@ -338,16 +339,6 @@ if __name__ == '__main__':
 
     df.info()
 
-
-    # In[40]:
-
-
-    # Create X and Y for data analys
-
-
-    # In[41]:
-
-
     df.shape
 
 
@@ -356,6 +347,13 @@ if __name__ == '__main__':
 
     df.head()
 
+    average_data = {}
+    for col in df.columns:
+        if df[col].dtypes != object:
+            average_data[col] = df[col].mean()
+
+    with open('average_data.json', 'w') as outfile:
+        json.dump(average_data, outfile)
 
     # ## Coding categorial signs   
     # We need to code underground, house_type, repair
@@ -375,6 +373,8 @@ if __name__ == '__main__':
 
     df.to_csv('flats_features.csv')
 
+
+    
 
     # In[46]:
 

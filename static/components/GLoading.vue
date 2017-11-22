@@ -4,7 +4,7 @@
         <span class="loading-2"></span>
         <span class="loading-3"></span>
         <br>
-        Loading, please wait
+        Пожалуйста, подождите...
     </div>
 </template>
 

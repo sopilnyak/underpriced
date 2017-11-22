@@ -15,12 +15,12 @@
                     <span v-show="errors.has('underground')" class="error-message">
                         {{ errors.first('underground') }}
                     </span>
-                </div>
-                <div class="subway-list"
-                     :class="{ 'subway-list-hidden': this.filterSubway === '' || this.isSubwaySelected !== null }" >
-                    <div v-for="subway in subwayList" class="subway-list-entry"
-                         @click="selectSubway(subway.name)">
-                        {{ subway.name }}
+                    <div class="subway-list"
+                         :class="{ 'subway-list-hidden': this.filterSubway === '' || this.isSubwaySelected !== null }" >
+                        <div v-for="subway in subwayList" class="subway-list-entry"
+                             @click="selectSubway(subway.name)">
+                            {{ subway.name }}
+                        </div>
                     </div>
                 </div>
                 <div class="input-block">
@@ -37,7 +37,7 @@
                 <div class="input-block area">
                     <div class="input-label">Общая площадь, кв. м.</div>
                     <input v-on:keyup.enter="postEstimate" class="area-input"
-                           v-validate="{ required: true, regex: /^\d*[\.\,]?\d*$/ }" name="area"
+                           v-validate="{ required: true, regex: /^\d*[\.\,]?\d*$/, not_in: [0] }" name="area"
                            ref="area">
                     <span v-show="errors.has('area')" class="error-message">
                         {{ errors.first('area') }}
@@ -46,7 +46,7 @@
                 <div class="input-block kitchen-area">
                     <div class="input-label">Площадь кухни, кв. м.</div>
                     <input v-on:keyup.enter="postEstimate" class="kitchen-area-input"
-                           v-validate="{ required: true, regex: /^\d*[\.\,]?\d*$/ }" name="kitchen-area"
+                           v-validate="{ regex: /^\d*[\.\,]?\d*$/, max_value: this.getArea() }" name="kitchen-area"
                            ref="kitchen_area">
                     <span v-show="errors.has('kitchen-area')" class="error-message">
                         {{ errors.first('kitchen-area') }}
@@ -55,7 +55,7 @@
                 <div class="input-block living-area">
                     <div class="input-label">Жилая площадь, кв. м.</div>
                     <input v-on:keyup.enter="postEstimate" class="living-area-input"
-                           v-validate="{ required: true, regex: /^\d*[\.\,]?\d*$/ }" name="living-area"
+                           v-validate="{ regex: /^\d*[\.\,]?\d*$/, max_value: this.getArea() }" name="living-area"
                            ref="living_area">
                     <span v-show="errors.has('living-area')" class="error-message">
                         {{ errors.first('living-area') }}
@@ -88,7 +88,7 @@
                 <div class="input-block curr-floor">
                     <div class="input-label">Этаж</div>
                     <input v-on:keyup.enter="postEstimate" class="curr-floor-input"
-                           v-validate="{ required: true, numeric: true }" name="curr-floor"
+                           v-validate="{ numeric: true, not_in: [0] }" name="curr-floor"
                            ref="curr_floor">
                     <span v-show="errors.has('curr-floor')" class="error-message">
                         {{ errors.first('curr-floor') }}
@@ -97,7 +97,7 @@
                 <div class="input-block total-floor">
                     <div class="input-label">Этажей в доме</div>
                     <input v-on:keyup.enter="postEstimate" class="total-floor-input"
-                           v-validate="{ required: true, numeric: true, min_value: this.getFilledCurrFloor() }"
+                           v-validate="{ numeric: true, min_value: this.getFilledCurrFloor(), not_in: [0] }"
                            name="total-floor" ref="total_floor">
                     <span v-show="errors.has('total-floor')" class="error-message">
                         {{ errors.first('total-floor') }}
@@ -106,7 +106,7 @@
                 <div class="input-block construction-year">
                     <div class="input-label">Год постройки дома</div>
                     <input v-on:keyup.enter="postEstimate" class="construction-year-input"
-                           v-validate="{ required: true, numeric: true, max_value: this.getCurrentYear() }"
+                           v-validate="{ numeric: true, max_value: this.getCurrentYear() }"
                            name="construction-year" ref="construction_year">
                     <span v-show="errors.has('construction-year')" class="error-message">
                         {{ errors.first('construction-year') }}
@@ -128,8 +128,10 @@
             </form>
             <div class="post-estimate">
                 <a @click.prevent="postEstimate" target="_blank" class="button button-estimate">Оценить</a>
+                <a @click.prevent="clear" target="_blank" class="button button-clear">Очистить</a>
             </div>
             <div v-if="hasFormErrors" class="error-message-big">Пожалуйста, проверьте форму на ошибки.</div>
+            <div v-if="hasBackendErrors" class="error-message-big">Что-то пошло не так. Попробуйте еще раз.</div>
             <div v-if="isEstimating">
                 <g-loading></g-loading>
             </div>
@@ -137,14 +139,13 @@
                 <span class="price-text">Предсказанная цена:</span>
                 <span class="price-number">{{ estimatedPrice }} рублей</span>
             </div>
-            <div class="pre-footer"></div>
         </div>
     </div>
 </template>
 
 <script>
     import GLoading from "./GLoading.vue"
-    import ru from 'vee-validate/dist/locale/ru';
+    import ru from '../resources/validation.js';
 
     export default {
         name: 'Estimate',
@@ -159,6 +160,7 @@
                 estimatedPrice: null,
                 hasFormErrors: false,
                 isEstimating: false,
+                hasBackendErrors: false,
             }
         },
         created() {
@@ -219,6 +221,7 @@
                         return;
                     }
                     this_.isEstimating = true;
+                    this_.hasBackendErrors = false;
                     this_.hasFormErrors = false;
                     $.ajax({
                         url: '/flats/estimate/',
@@ -244,7 +247,7 @@
                         },
                         error: function (jqXHR, e) {
                             this_.isEstimating = false;
-                            console.log('Estimating error');
+                            this_.hasBackendErrors = true;
                         }
                     });
                 });
@@ -262,6 +265,23 @@
             },
             getFilledCurrFloor() {
                 return this.$refs.curr_floor === undefined ? 0 : this.$refs.curr_floor.value;
+            },
+            getArea() {
+                return this.$refs.area === undefined ? 0 : this.$refs.area.value;
+            },
+            clear() {
+                this.$refs.area.value = "";
+                this.$refs.construction_year.value = "";
+                this.$refs.kitchen_area.value = "";
+                this.$refs.living_area.value = "";
+                this.$refs.underground.value = "";
+                this.$refs.curr_floor.value = "";
+                this.$refs.total_floor.value = "";
+                this.hasFormErrors = false;
+                this.isEstimating = false;
+                this.isEstimated = false;
+                this.hasBackendErrors = null;
+                this.errors.clear();
             }
         },
         watch: {
@@ -276,18 +296,16 @@
 
 <style scoped>
     .estimate {
-        min-width: 1300px;
+        min-width: 1100px;
     }
     .subway-list-hidden {
         display: none;
     }
     .subway-list {
         position: absolute;
-        left: 140px;
-        margin-top: 65px;
         max-height: 300px;
         overflow: hidden;
-        width: 13.4em;
+        width: 13.3em;
     }
     .header {
         font-size: 20px;
@@ -296,8 +314,18 @@
         margin-bottom: 10px;
     }
     .button-estimate {
-        width: 200px;
+        width: 11.7em;
         text-align: center;
+        margin-right: 0.5em;
+        margin-bottom: 3em;
+    }
+    .button-clear {
+        width: 11.7em;
+        text-align: center;
+        background-color: rgba(140,154,182,0.41);
+        border-color: rgba(140,154,182,0.31);
+        color: inherit;
+        margin-bottom: 3em;
     }
     .post-estimate {
         margin-top: 20px;
@@ -307,9 +335,6 @@
         margin-top: 20px;
         margin-left: 100px;
         font-size: 30px;
-    }
-    .pre-footer {
-        margin-bottom: 350px;
     }
     .price-text {
         color: gray;
@@ -329,7 +354,6 @@
     }
     .estimate-input {
         margin-left: 100px;
-        margin-right: 100px;
     }
     .underground {
         width: 14em;

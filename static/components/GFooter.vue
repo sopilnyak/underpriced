@@ -9,7 +9,7 @@
         name: 'GFooter',
         data: function() {
             return {
-                version: 0.2
+                version: 0.3
             }
         }
     }
@@ -17,6 +17,10 @@
 
 <style scoped>
     .footer {
+        position: absolute;
+        right: 0;
+        left: 0;
+        bottom: 0;
         margin-top: 20px;
         padding-top: 8px;
         padding-left: 10px;

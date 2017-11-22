@@ -10,7 +10,7 @@
         name: 'GHeader',
         methods: {
             clickIndex() {
-                this.$router.push({name: 'underpriced'})
+                this.$router.push({name: 'landing'})
             },
         }
     }
