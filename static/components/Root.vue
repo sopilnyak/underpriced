@@ -1,5 +1,5 @@
 <template>
-    <div id="main">
+    <div id="main" class="content">
         <g-header></g-header>
         <list-header></list-header>
         <router-view></router-view>
@@ -25,13 +25,23 @@
 </script>
 
 <style>
+    html {
+        height: 100%;
+    }
+
     body {
+        position: relative;
+        min-height: 100%;
         margin: 0;
         color: #313334;
-        font-family: "Open Sans";
+        font-family: "Open Sans", Helvetica;
         font-size: 14px;
         background-color: #EDEFF1;
-        min-width: 1000px;
+        min-width: 1100px;
+    }
+
+    .content {
+        padding-bottom: 30px;
     }
 
     .number {
@@ -84,7 +94,7 @@
     }
 
     .filters {
-        padding: 20px 40px;
+        padding: 20px 0 20px 40px;
     }
 
     select {
