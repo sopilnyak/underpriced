@@ -37,7 +37,7 @@
         font-family: "Open Sans", Helvetica;
         font-size: 14px;
         background-color: #EDEFF1;
-        min-width: 1000px;
+        min-width: 1100px;
     }
 
     .content {
@@ -94,7 +94,7 @@
     }
 
     .filters {
-        padding: 20px 40px;
+        padding: 20px 0 20px 40px;
     }
 
     select {

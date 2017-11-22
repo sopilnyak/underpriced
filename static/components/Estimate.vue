@@ -128,6 +128,7 @@
             </form>
             <div class="post-estimate">
                 <a @click.prevent="postEstimate" target="_blank" class="button button-estimate">Оценить</a>
+                <a @click.prevent="clear" target="_blank" class="button button-clear">Очистить</a>
             </div>
             <div v-if="hasFormErrors" class="error-message-big">Пожалуйста, проверьте форму на ошибки.</div>
             <div v-if="hasBackendErrors" class="error-message-big">Что-то пошло не так. Попробуйте еще раз.</div>
@@ -267,6 +268,20 @@
             },
             getArea() {
                 return this.$refs.area === undefined ? 0 : this.$refs.area.value;
+            },
+            clear() {
+                this.$refs.area.value = "";
+                this.$refs.construction_year.value = "";
+                this.$refs.kitchen_area.value = "";
+                this.$refs.living_area.value = "";
+                this.$refs.underground.value = "";
+                this.$refs.curr_floor.value = "";
+                this.$refs.total_floor.value = "";
+                this.hasFormErrors = false;
+                this.isEstimating = false;
+                this.isEstimated = false;
+                this.hasBackendErrors = null;
+                this.errors.clear();
             }
         },
         watch: {
@@ -281,7 +296,7 @@
 
 <style scoped>
     .estimate {
-        min-width: 1300px;
+        min-width: 1100px;
     }
     .subway-list-hidden {
         display: none;
@@ -301,6 +316,16 @@
     .button-estimate {
         width: 11.7em;
         text-align: center;
+        margin-right: 0.5em;
+        margin-bottom: 3em;
+    }
+    .button-clear {
+        width: 11.7em;
+        text-align: center;
+        background-color: rgba(140,154,182,0.41);
+        border-color: rgba(140,154,182,0.31);
+        color: inherit;
+        margin-bottom: 3em;
     }
     .post-estimate {
         margin-top: 20px;
@@ -329,7 +354,6 @@
     }
     .estimate-input {
         margin-left: 100px;
-        margin-right: 100px;
     }
     .underground {
         width: 14em;
