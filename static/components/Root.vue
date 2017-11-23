@@ -164,7 +164,7 @@
 
     .entry {
         display: block;
-        margin: 20px 0;
+        margin: 20px 30px 20px 0;
         border: 1px solid #375084;
         -webkit-border-radius: 2px;
         padding: 20px 30px;
@@ -207,23 +207,23 @@
         clear: both;
     }
 
-    .actual-price {
+    .predicted-price {
         font-size: 30px;
         color: #424445;
     }
 
-    .actual-price-hint {
+    .predicted-price-hint {
         color: gray;
         font-size: 18px;
         margin-left: 2px;
     }
 
-    .predicted-price-title {
+    .actual-price-title {
         color: gray;
         font-size: inherit;
     }
 
-    .predicted-price-hint {
+    .actual-price-hint {
         color: gray;
         font-size: 15px;
     }
@@ -273,6 +273,7 @@
     }
 
     .sort-container {
+        display: inline-block;
         padding: 0.3em 0 0 0.5em;
         height: 2em;
         font-weight: bold;
@@ -287,6 +288,37 @@
     .pagination-block {
         width: 100%;
         overflow: hidden;
+    }
+
+    .shareFB {
+        float: right;
+        margin-right: 30px;
+    }
+
+    .shareVK {
+        float: right;
+        margin-right: 10px;
+    }
+
+    .dropdown-hidden {
+        display: none;
+    }
+
+    .dropdown {
+        display: block;
+        position: absolute;
+        margin-top: 5px;
+    }
+
+    .dropdown-entry {
+        width: 16.3em;
+        padding: 5px 10px;
+        background-color: rgba(217,219,221,0.70);
+    }
+
+    .dropdown-entry:hover {
+        background-color: #8C9AB6;
+        color: #ffffff;
     }
 
 </style>

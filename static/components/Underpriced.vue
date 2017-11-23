@@ -15,10 +15,25 @@
             </select>
             <input v-model="filterQueries['underground']" placeholder="Поиск по метро...">
             <input v-model="filterQueries['address']" placeholder="Поиск по адресу...">
-            <span class="sort-container">
+            <div class="sort-container">
+                <span class="folders-head-sort">
+                    <span @click="setDropdownVisibility()">Сортировано по {{ sortFieldText }}</span>
+                    <span @click="changeSortDirection" class="filter"> {{ sortDirectionSign }} </span>
+                </span>
+                <div :class="{ 'dropdown-hidden': isDropdownHidden, 'dropdown': !isDropdownHidden }">
+                    <div class="dropdown-entry" @click="sortBy('price')">По реальной цене</div>
+                    <div class="dropdown-entry" @click="sortBy('predicted')">По предсказанной цене</div>
+                    <div class="dropdown-entry" @click="sortBy('difference')" title="Сортировать по разнице между реальной и предсказанной ценой">
+                        По разнице
+                    </div>
+                </div>
+            </div>
+            <!--<span class="sort-container">
                 <span @click="changeSortDirection">Сортировать по цене</span>
                 <span @click="changeSortDirection" class="filter"> {{ sortDirectionSign }} </span>
-            </span>
+            </span>-->
+            <span class="shareFB" v-html="shareButtonFB"></span>
+            <span class="shareVK" v-html="shareButtonVK"></span>
 
             <paginate
                     name="flats"
@@ -48,13 +63,13 @@
                         <span class="external">{{ flat.address }}</span><br>
                     </div>
                     <div class="third-column">
-                        <span class="actual-price">{{ flat.price.rub_price }}</span>
+                        <span title="Предсказанная цена" class="predicted-price">{{ formatPrice(100000) }}</span>
+                        <span class="predicted-price-hint">руб. / месяц</span><br>
+                        <span class="actual-price-title">Реальная цена:</span>
+                        <span class="actual-price">{{ formatPrice(flat.price.rub_price) }}</span>
                         <span class="actual-price-hint">руб. / месяц</span><br>
-                        <!--<span class="predicted-price-title">Предсказанная цена:</span>-->
-                        <!--<span class="predicted-price">{{ flat.predicted_price }}</span>-->
-                        <!--<span class="predicted-price-hint">руб. / месяц</span><br>-->
                         <a :href="flat.url" target="_blank" class="button">Перейти к объявлению</a><br>
-                        <a :href="flat.url" target="_blank" class="source">cian.ru</a>
+                        <a :href="flat.url" title="Источник объявления" target="_blank" class="source">cian.ru</a>
                     </div>
                     <br>
                 </div>
@@ -89,6 +104,8 @@
                 },
                 paginate: ['flats'],
                 sortDirection: 1,
+                sortField: "price",
+                isDropdownHidden: true,
             }
         },
         created() {
@@ -125,13 +142,18 @@
                     )
                     .sort(
                         function (a, b) {
-                            let value1 = parseInt(a.price.rub_price);
-                            let value2 = parseInt(b.price.rub_price);
-
-                            if (value1 === null || value2 === null || value1 === value2) {
-                                return this_.sortDirection
+                            let sortField = this_.sortField;
+                            let sortDirection = this_.sortDirection;
+                            let value1 = parseInt(a[sortField]);
+                            let value2 = parseInt(b[sortField]);
+                            if (sortField === "price") {
+                                value1 = parseInt(a.price.rub_price);
+                                value2 = parseInt(b.price.rub_price);
                             }
-                            return ((value1 < value2) ? -1 : 1) * this_.sortDirection;
+                            if (value1 === null || value2 === null || value1 === value2) {
+                                return sortDirection;
+                            }
+                            return ((value1 < value2) ? -1 : 1) * sortDirection;
                         }
                     );
             },
@@ -142,10 +164,40 @@
                     return '▼';
                 }
             },
+            sortFieldText() {
+                if (this.sortField === 'price') {
+                    return 'реальной цене';
+                }
+                if (this.sortField === 'predicted') {
+                    return 'предсказанной цене';
+                }
+                if (this.sortField === 'difference') {
+                    return 'разнице';
+                }
+                return '';
+            },
+            shareButtonVK() {
+                return VK.Share.button({ url: "http://underpriced.ru/"}, {type: "round", text: "Поделиться" });
+            },
+            shareButtonFB() {
+                return '<iframe src="https://www.facebook.com/plugins/share_button.php?href=http%3A%2F%2Funderpriced.ru&layout=button_count&size=small&mobile_iframe=true&width=68&height=20&appId" ' +
+                    'width="68" height="20" style="border:none;overflow:hidden" scrolling="no" frameborder="0" ' +
+                    'allowTransparency="true"></iframe>'
+            }
         },
         methods: {
             changeSortDirection() {
                 this.sortDirection *= -1
+            },
+            sortBy(field) {
+                this.sortField = field;
+                this.isDropdownHidden = true;
+            },
+            formatPrice(price) {
+                return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+            },
+            setDropdownVisibility() {
+                this.isDropdownHidden = !this.isDropdownHidden;
             },
         }
     }
