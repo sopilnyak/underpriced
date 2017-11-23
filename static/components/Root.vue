@@ -37,7 +37,7 @@
         font-family: "Open Sans", Helvetica;
         font-size: 14px;
         background-color: #EDEFF1;
-        min-width: 1100px;
+        min-width: 1250px;
     }
 
     .content {
@@ -319,6 +319,18 @@
     .dropdown-entry:hover {
         background-color: #8C9AB6;
         color: #ffffff;
+    }
+
+    .filter-underground {
+        width: 8em;
+    }
+
+    .filter-distance {
+        width: 8em;
+    }
+
+    .filter-distance-type {
+        margin-left: 0.7em;
     }
 
 </style>

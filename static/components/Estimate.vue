@@ -10,10 +10,10 @@
             <form class="estimate-input">
                 <div class="input-block underground">
                     <div class="input-label">Метро</div>
-                    <input v-on:keyup.enter="postEstimate" v-validate="'required'" name="underground"
-                           v-model="filterSubway" ref="underground" class="underground-input">
-                    <span v-show="errors.has('underground')" class="error-message">
-                        {{ errors.first('underground') }}
+                    <input v-on:keyup.enter="postEstimate" v-validate="'required'" name="underground_name"
+                           v-model="filterSubway" ref="underground_name" class="underground-input">
+                    <span v-show="errors.has('underground_name')" class="error-message">
+                        {{ errors.first('underground_name') }}
                     </span>
                     <div class="subway-list"
                          :class="{ 'subway-list-hidden': this.filterSubway === '' || this.selectedSubway !== null }" >
@@ -22,6 +22,22 @@
                             {{ subway.name }}
                         </div>
                     </div>
+                </div>
+                <div class="input-block underground-time">
+                    <div class="input-label">Минут до метро</div>
+                    <input v-on:keyup.enter="postEstimate" class="underground-time-input"
+                           v-validate="{ required: true, numeric: true, not_in: [0] }" name="underground_time"
+                           ref="underground_time">
+                    <span v-show="errors.has('underground_time')" class="error-message">
+                        {{ errors.first('underground_time') }}
+                    </span>
+                </div>
+                <div class="input-block">
+                    <div class="input-label underground_way">&nbsp;</div>
+                    <select ref="underground_way" class="underground_way-input">
+                        <option value="пешком" selected>пешком</option>
+                        <option value="на машине">на транспорте</option>
+                    </select>
                 </div>
                 <div class="input-block">
                     <div class="input-label rooms">Кол-во комнат</div>
@@ -61,6 +77,7 @@
                         {{ errors.first('living-area') }}
                     </span>
                 </div>
+                <br>
                 <div class="input-block repair">
                     <div class="input-label">Ремонт</div>
                     <select ref="repair" class="repair-input">
@@ -70,19 +87,30 @@
                         <option value="отсутствует">Отсутствует</option>
                     </select>
                 </div>
-                <br>
                 <div class="input-block has-balcony">
                     <div class="input-label">Наличие балкона</div>
                     <select ref="has_balcony" class="has-balcony-input">
-                        <option value="да" selected>Да</option>
-                        <option value="нет">Нет</option>
+                        <option value="да">Да</option>
+                        <option value="нет" selected>Нет</option>
                     </select>
                 </div>
                 <div class="input-block has-loggia">
                     <div class="input-label">Наличие лоджии</div>
                     <select ref="has_loggia" class="has-loggia-input">
-                        <option value="да">Да</option>
-                        <option value="нет" selected>Нет</option>
+                        <option value="да" selected>Да</option>
+                        <option value="нет">Нет</option>
+                    </select>
+                </div>
+                <div class="input-block house-type">
+                    <div class="input-label">Тип дома</div>
+                    <select ref="house_type" class="house-type-input">
+                        <option value="панельный" selected>Панельный</option>
+                        <option value="блочный">Блочный</option>
+                        <option value="кирпичный">Кирпичный</option>
+                        <option value="монолитный">Монолитный</option>
+                        <option value="кирпично-монолитный">Кирпично-монолитный</option>
+                        <option value="сталинский">Сталинский</option>
+                        <option value="старый фонд">Старый фонд</option>
                     </select>
                 </div>
                 <div class="input-block curr-floor">
@@ -111,18 +139,6 @@
                     <span v-show="errors.has('construction-year')" class="error-message">
                         {{ errors.first('construction-year') }}
                     </span>
-                </div>
-                <div class="input-block house-type">
-                    <div class="input-label">Тип дома</div>
-                    <select ref="house_type" class="house-type-input">
-                        <option value="панельный" selected>Панельный</option>
-                        <option value="блочный">Блочный</option>
-                        <option value="кирпичный">Кирпичный</option>
-                        <option value="монолитный">Монолитный</option>
-                        <option value="кирпично-монолитный">Кирпично-монолитный</option>
-                        <option value="сталинский">Сталинский</option>
-                        <option value="старый фонд">Старый фонд</option>
-                    </select>
                 </div>
                 <br>
             </form>
@@ -173,13 +189,14 @@
             this.$validator.localize('ru', {
                 messages: ru.messages,
                 attributes: {
-                    'underground': '"Метро"',
+                    'underground_name': '"Метро"',
                     'area': '"Общая площадь"',
                     'kitchen-area': '"Площадь кухни"',
                     'living-area': '"Жилая площадь"',
                     'curr-floor': '"Этаж"',
                     'total-floor': '"Этажей в доме"',
                     'construction-year': '"Год постройки дома"',
+                    'underground_time': '"Минут до метро"',
               }
             });
         },
@@ -240,18 +257,20 @@
                         type: 'POST',
                         data: {
                             area: this_.formatFloat(this.$refs.area.value),
-                            combined_bathroom_count: 1,
+                            combined_bathroom_count: "",
                             construction_year: this.$refs.construction_year.value,
                             house_type: this.$refs.house_type.value,
                             kitchen_area: this_.formatFloat(this.$refs.kitchen_area.value),
                             living_area: this_.formatFloat(this.$refs.living_area.value),
                             repair: this.$refs.repair.value,
                             rooms: this.$refs.rooms.value,
-                            underground: this.$refs.underground.value,
+                            underground_name: this.$refs.underground_name.value,
                             has_balcony: this.$refs.has_balcony.value,
                             has_loggia: this.$refs.has_loggia.value,
                             curr_floor: this.$refs.curr_floor.value,
-                            total_floor: this.$refs.total_floor.value
+                            total_floor: this.$refs.total_floor.value,
+                            underground_way: this.$refs.underground_way.value,
+                            underground_time: this.$refs.underground_time.value,
                         },
                         success: function (response) {
                             this_.isEstimating = false;
@@ -287,9 +306,11 @@
                 this.$refs.kitchen_area.value = "";
                 this.$refs.living_area.value = "";
                 this.filterSubway = "";
-                this.$refs.underground.value = "";
+                this.$refs.underground_name.value = "";
                 this.$refs.curr_floor.value = "";
                 this.$refs.total_floor.value = "";
+                this.$refs.underground_way.value = "";
+                this.$refs.underground_time.value = "";
                 this.hasFormErrors = false;
                 this.isEstimating = false;
                 this.estimatedPrice = null;
@@ -376,6 +397,12 @@
     .underground-input {
         width: 11em !important;
     }
+    .underground-time {
+        width: 7.6em;
+    }
+    .underground-time-input {
+        width: 5em !important;
+    }
     .rooms {
         width: 12em;
     }
@@ -398,16 +425,16 @@
         width: 7em;
     }
     .repair {
-        width: 11em;
+        width: 11.4em;
     }
     .repair-input {
-        width: 11em;
+        width: 10em;
     }
     .has-balcony {
-        width: 14em;
+        width: 10.2em;
     }
     .has-balcony-input {
-        width: 12.4em !important;
+        width: 8.8em !important;
     }
     .has-loggia {
         width: 12.1em;
@@ -419,7 +446,7 @@
         width: 7em !important;
     }
     .total-floor {
-        width: 9.9em;
+        width: 10em;
     }
     .total-floor-input {
         width: 7em;
@@ -431,10 +458,10 @@
         width: 7em !important;
     }
     .house-type {
-        width: 11em;
+        width: 12.15em;
     }
     .house-type-input {
-        width: 11em;
+        width: 10.65em;
     }
     .input-block {
         margin-top: 15px;

@@ -13,8 +13,13 @@
                 <option value="5">5</option>
                 <option value="-1">Студия</option>
             </select>
-            <input v-model="filterQueries['underground']" placeholder="Поиск по метро...">
-            <input v-model="filterQueries['address']" placeholder="Поиск по адресу...">
+            <input class="filter-underground" v-model="filterQueries['underground']" placeholder="Поиск по метро...">
+            <input class="filter-distance" v-model="filterQueries['distance']" placeholder="Время до метро"> минут
+            <select class="filter-distance-type" v-model="filterQueries['distance_type']">
+                <option selected value="">на чем угодно</option>
+                <option value="пешком">пешком</option>
+                <option value="на машине">на транспорте</option>
+            </select>
             <div class="sort-container">
                 <span class="folders-head-sort">
                     <span @click="setDropdownVisibility()">Сортировано по {{ sortFieldText }}</span>
@@ -61,7 +66,7 @@
                         <span class="external">{{ flat.address }}</span><br>
                     </div>
                     <div class="third-column">
-                        <span title="Предсказанная цена" class="predicted-price">{{ formatPrice(100000) }}</span>
+                        <span title="Предсказанная цена" class="predicted-price">{{ predicted(flat.price) }}</span>
                         <span class="predicted-price-hint">руб. / месяц</span><br>
                         <span class="actual-price-title">Реальная цена:</span>
                         <span class="actual-price">{{ formatPrice(flat.price) }}</span>
@@ -95,7 +100,9 @@
                 filterQueries: {
                     rooms_number: "",
                     underground: "",
-                    address: ""
+                    address: "",
+                    distance: "",
+                    distance_type: "",
                 },
                 paginate: ['flats'],
                 sortDirection: -1,
@@ -184,6 +191,9 @@
             },
             setDropdownVisibility() {
                 this.isDropdownHidden = !this.isDropdownHidden;
+            },
+            predicted(price) {
+                return this.formatPrice(price - parseInt(Math.random() * 10000));
             },
         },
     }

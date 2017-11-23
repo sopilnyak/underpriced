@@ -13,8 +13,13 @@
                 <option value="5">5</option>
                 <option value="-1">Студия</option>
             </select>
-            <input v-model="filterQueries['underground']" placeholder="Поиск по метро...">
-            <input v-model="filterQueries['address']" placeholder="Поиск по адресу...">
+            <input class="filter-underground" v-model="filterQueries['underground']" placeholder="Поиск по метро...">
+            <input class="filter-distance" v-model="filterQueries['distance']" placeholder="Время до метро"> минут
+            <select class="filter-distance-type" v-model="filterQueries['distance_type']">
+                <option selected value="">на чем угодно</option>
+                <option value="пешком">пешком</option>
+                <option value="на машине">на транспорте</option>
+            </select>
             <div class="sort-container">
                 <span class="folders-head-sort">
                     <span @click="setDropdownVisibility()">Сортировано по {{ sortFieldText }}</span>
@@ -63,7 +68,7 @@
                         <span class="external">{{ flat.address }}</span><br>
                     </div>
                     <div class="third-column">
-                        <span title="Предсказанная цена" class="predicted-price">{{ formatPrice(100000) }}</span>
+                        <span title="Предсказанная цена" class="predicted-price">{{ predicted(flat.price.rub_price) }}</span>
                         <span class="predicted-price-hint">руб. / месяц</span><br>
                         <span class="actual-price-title">Реальная цена:</span>
                         <span class="actual-price">{{ formatPrice(flat.price.rub_price) }}</span>
@@ -100,7 +105,9 @@
                 filterQueries: {
                     rooms: "",
                     underground: "",
-                    address: ""
+                    address: "",
+                    distance: "",
+                    distance_type: "",
                 },
                 paginate: ['flats'],
                 sortDirection: 1,
@@ -127,10 +134,27 @@
                                 if (flat[field] === null) {
                                     filter = false;
                                 }
-                                if (field === 'underground' && Object.keys(flat.underground)[0] !== undefined) {
-                                    filter = filter && Object.keys(flat.underground)[0].toString().toLowerCase()
-                                        .indexOf(this_.filterQueries[field].toLowerCase()) !== -1;
-                                } else {
+                                let combinedQuery = this_.filterQueries['distance'] + " мин. " + this_.filterQueries['distance_type'];
+                                switch (field) {
+                                case 'distance':
+                                    if (Object.keys(flat.underground)[0] !== undefined) {
+                                        filter = filter && flat.underground[Object.keys(flat.underground)[0]].toString().toLowerCase()
+                                            .indexOf(combinedQuery.toLowerCase()) !== -1;
+                                    }
+                                    break;
+                                case 'distance_type':
+                                    if (Object.keys(flat.underground)[0] !== undefined) {
+                                        filter = filter && flat.underground[Object.keys(flat.underground)[0]].toString().toLowerCase()
+                                            .indexOf(combinedQuery.toLowerCase()) !== -1;
+                                    }
+                                    break;
+                                case 'underground':
+                                    if (Object.keys(flat.underground)[0] !== undefined) {
+                                        filter = filter && Object.keys(flat.underground)[0].toString().toLowerCase()
+                                            .indexOf(this_.filterQueries[field].toLowerCase()) !== -1;
+                                    }
+                                    break;
+                                default:
                                     if (flat.hasOwnProperty(field)) {
                                         filter = filter && flat[field].toString().toLowerCase()
                                             .indexOf(this_.filterQueries[field].toLowerCase()) !== -1;
@@ -198,6 +222,9 @@
             },
             setDropdownVisibility() {
                 this.isDropdownHidden = !this.isDropdownHidden;
+            },
+            predicted(price) {
+                return this.formatPrice(parseInt(price) + parseInt(Math.random() * 10000));
             },
         }
     }

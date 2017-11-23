@@ -22,7 +22,7 @@ def get_flat(request, id):
 
 def get_flat_list(request):
     flat_list = list(flats.find())
-    return JsonResponse(flat_list)
+    return JsonResponse(flat_list, safe=False)
 
 def estimate_flat(request):
     if request.method == "POST":
@@ -35,13 +35,16 @@ def estimate_flat(request):
             'living_area',
             'repair',
             'rooms',
-            'underground',
+            'underground_name',
             'has_balcony',
             'has_loggia',
             'curr_floor',
-            'total_floor'
+            'total_floor',
+            'underground_way',
+            'underground_time',
         ]
         flat = {field: request.POST[field] if request.POST[field] != "" else None for field in fields}
+        print(flat)
         price = ml_estimate_flat(**flat)
         return JsonResponse({'price': price})
     else:
