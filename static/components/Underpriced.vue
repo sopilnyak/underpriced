@@ -14,7 +14,8 @@
                 <option value="-1">Студия</option>
             </select>
             <input class="filter-underground" v-model="filterQueries['underground']" placeholder="Поиск по метро...">
-            <input class="filter-distance" v-model="filterQueries['distance']" placeholder="Время до метро"> минут
+            Не более
+            <input class="filter-distance" v-model="filterQueries['distance']" placeholder="время до метро"> минут
             <select class="filter-distance-type" v-model="filterQueries['distance_type']">
                 <option selected value="">на чем угодно</option>
                 <option value="пешком">пешком</option>
@@ -22,7 +23,7 @@
             </select>
             <div class="sort-container">
                 <span class="folders-head-sort">
-                    <span @click="setDropdownVisibility()">Сортировано по {{ sortFieldText }}</span>
+                    <span @click="setDropdownVisibility()">По {{ sortFieldText }}</span>
                     <span @click="changeSortDirection" class="filter"> {{ sortDirectionSign }} </span>
                 </span>
                 <div :class="{ 'dropdown-hidden': isDropdownHidden, 'dropdown': !isDropdownHidden }">
@@ -131,21 +132,18 @@
                         function (flat) {
                             let filter = true;
                             filterFields.forEach(function(field) {
-                                if (flat[field] === null) {
-                                    filter = false;
-                                }
-                                let combinedQuery = this_.filterQueries['distance'] + " мин. " + this_.filterQueries['distance_type'];
                                 switch (field) {
                                 case 'distance':
                                     if (Object.keys(flat.underground)[0] !== undefined) {
-                                        filter = filter && flat.underground[Object.keys(flat.underground)[0]].toString().toLowerCase()
-                                            .indexOf(combinedQuery.toLowerCase()) !== -1;
+                                        let distance = flat.underground[Object.keys(flat.underground)[0]].match(/\d+/)[0];
+                                        filter = filter && (this_.filterQueries['distance'] === "" ||
+                                            parseInt(distance) <= parseInt(this_.filterQueries['distance']));
                                     }
                                     break;
                                 case 'distance_type':
                                     if (Object.keys(flat.underground)[0] !== undefined) {
                                         filter = filter && flat.underground[Object.keys(flat.underground)[0]].toString().toLowerCase()
-                                            .indexOf(combinedQuery.toLowerCase()) !== -1;
+                                            .indexOf(this_.filterQueries['distance_type'].toLowerCase()) !== -1;
                                     }
                                     break;
                                 case 'underground':
@@ -155,6 +153,9 @@
                                     }
                                     break;
                                 default:
+                                    if (flat[field] === null) {
+                                        filter = false;
+                                    }
                                     if (flat.hasOwnProperty(field)) {
                                         filter = filter && flat[field].toString().toLowerCase()
                                             .indexOf(this_.filterQueries[field].toLowerCase()) !== -1;

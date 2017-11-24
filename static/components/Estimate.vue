@@ -153,7 +153,7 @@
             <div v-if="isEstimating">
                 <g-loading></g-loading>
             </div>
-            <div v-if="isEstimated && !isEstimating" class="price">
+            <div v-if="isEstimated && !isEstimating && !hasBackendErrors && !hasFormErrors" class="price">
                 <span class="price-text">Предсказанная цена:</span>
                 <span class="price-number">{{ formatPrice(estimatedPrice) }} рублей в месяц</span>
                 <div>
