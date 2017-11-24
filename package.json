@@ -6,9 +6,12 @@
   "private": true,
   "scripts": {
     "build": "webpack --config build/webpack.dev.conf.js",
+    "prod": "webpack --config build/webpack.prod.conf.js",
     "watch": "webpack --config build/webpack.dev.conf.js --watch"
   },
   "dependencies": {
+    "babel-minify-webpack-plugin": "^0.2.0",
+    "babel-polyfill": "^6.26.0",
     "vee-validate": "^2.0.0-rc.21",
     "vue": "^2.4.2",
     "vue-paginate": "^3.5.1",
