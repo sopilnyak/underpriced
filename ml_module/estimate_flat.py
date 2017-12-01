@@ -1,4 +1,6 @@
-from .features_extractor import centered_subways, encode_with_OneHotEncoder_and_delete_column, encode_with_LabelEncoder, perform_coding_and_delete_column
+# import sys
+# sys.path.append('.')
+from .features_extractor.utils import centered_subways, encode_with_OneHotEncoder_and_delete_column, encode_with_LabelEncoder, perform_coding_and_delete_column
 from sklearn.externals import joblib
 import pandas as pd
 import os
@@ -32,13 +34,15 @@ def estimate_flat(
         living_area=None,      
         repair=None,   
         rooms=None,           
-        underground=None,        
+        underground_name=None,        
         has_balcony=None,     
         has_loggia=None,      
         curr_floor=None,            
-        total_floor=None):
+        total_floor=None,
+        underground_way=None, 
+        underground_time=None):
 
-    json_data = open(os.path.join(BASE_DIR, 'ml_module/average_data.json')).read()
+    json_data = open(os.path.join(BASE_DIR, 'ml_module/features_extractor/average_data.json')).read()
     average_data = json.loads(json_data)
 
     centered_subways_lower = [item.lower() for item in centered_subways]
@@ -51,39 +55,36 @@ def estimate_flat(
         'living_area': prepare_feature(average_data, 'living_area', living_area, float),
         'repair': repair,
         'rooms':  prepare_feature(average_data, 'rooms', rooms, int),
-        'underground':  underground.lower(),
+        'underground_name':  underground_name.lower(),
         'has_balcony': has_to_int(has_balcony),
         'has_loggia': has_to_int(has_loggia),
         'curr_floor': prepare_feature(average_data, 'curr_floor', curr_floor, int),
         'total_floor': prepare_feature(average_data, 'total_floor', total_floor, int),
-        'is_center': underground.lower() in centered_subways_lower
+        'is_center': underground_name.lower() in centered_subways_lower, 
+        'underground_way': -1 if underground_way == 'пешком' else 1,
+        'underground_time': prepare_feature(average_data, 'underground_time', underground_time, int)
     }
-    
+    print(features)
     data = pd.DataFrame(features, index=[0])
-    data, metro_le_encoder = encode_with_OneHotEncoder_and_delete_column(data,'underground')
+    data, metro_le_encoder = encode_with_OneHotEncoder_and_delete_column(data,'underground_name')
     data, house_type_le_encoder = encode_with_OneHotEncoder_and_delete_column(data,'house_type')
     data, repair_le_encoder = encode_with_OneHotEncoder_and_delete_column(data,'repair')
-    clf = joblib.load(os.path.join(BASE_DIR, 'ml_module/model_random_forest.pkl'))
+    clf = joblib.load(os.path.join(BASE_DIR, 'ml_module/algorithm/model_random_forest.pkl'))
     
     columns = []
-    with open(os.path.join(BASE_DIR, 'ml_module/features.json'), 'r') as f:
+    with open(os.path.join(BASE_DIR, 'ml_module/features_extractor/features.json'), 'r') as f:
         columns = np.array(json.loads(f.readline())['features'])
 
-    columns = np.delete(columns, np.argwhere(columns=='price'))
-
-    # with open(os.path.join(BASE_DIR, 'ml_module/features.json'), 'w') as outfile:
-    #     all_columns = {}
-    #     all_columns['features'] = columns.tolist()
-    #     json.dump(all_columns, outfile)
+    columns = np.delete(columns, np.argwhere(columns == 'price'))
 
     flat = pd.DataFrame(columns=columns)
     flat = flat.append(data)
     flat = flat.fillna(0)
     price = 0
-    
+    print("NEW")
     # TODO: different amount of features sometimes
     try:
-        price = round(clf.predict(flat).tolist()[0])
+        price = round(np.exp(clf.predict(flat).tolist()[0]))
     except:
         raise NameError('SmthWentWrong')
     return price
