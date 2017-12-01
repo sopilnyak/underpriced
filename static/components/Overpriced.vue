@@ -14,7 +14,8 @@
                 <option value="-1">Студия</option>
             </select>
             <input class="filter-underground" v-model="filterQueries['underground']" placeholder="Поиск по метро...">
-            <input class="filter-distance" v-model="filterQueries['distance']" placeholder="Время до метро"> минут
+            Не более
+            <input class="filter-distance" v-model="filterQueries['distance']" placeholder="время до метро"> минут
             <select class="filter-distance-type" v-model="filterQueries['distance_type']">
                 <option selected value="">на чем угодно</option>
                 <option value="пешком">пешком</option>
@@ -22,7 +23,7 @@
             </select>
             <div class="sort-container">
                 <span class="folders-head-sort">
-                    <span @click="setDropdownVisibility()">Сортировано по {{ sortFieldText }}</span>
+                    <span @click="setDropdownVisibility()">По {{ sortFieldText }}</span>
                     <span @click="changeSortDirection" class="filter"> {{ sortDirectionSign }} </span>
                 </span>
                 <div :class="{ 'dropdown-hidden': isDropdownHidden, 'dropdown': !isDropdownHidden }">

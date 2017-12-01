@@ -44,7 +44,6 @@ def estimate_flat(request):
             'underground_time',
         ]
         flat = {field: request.POST[field] if request.POST[field] != "" else None for field in fields}
-        print(flat)
         price = ml_estimate_flat(**flat)
         return JsonResponse({'price': price})
     else:

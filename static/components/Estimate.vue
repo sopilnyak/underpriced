@@ -4,6 +4,8 @@
             <g-loading></g-loading>
         </div>
         <div v-else class="filters" :key="'loaded'">
+            <span class="shareFB" v-html="shareButtonFB"></span>
+            <span class="shareVK" v-html="shareButtonVK"></span>
             <div class="header">
                 Введите параметры своей квартиры, и мы оценим примерную стоимость ее аренды.
             </div>
@@ -151,7 +153,7 @@
             <div v-if="isEstimating">
                 <g-loading></g-loading>
             </div>
-            <div v-if="isEstimated && !isEstimating" class="price">
+            <div v-if="isEstimated && !isEstimating && !hasBackendErrors && !hasFormErrors" class="price">
                 <span class="price-text">Предсказанная цена:</span>
                 <span class="price-number">{{ formatPrice(estimatedPrice) }} рублей в месяц</span>
                 <div>
@@ -274,7 +276,7 @@
                         },
                         success: function (response) {
                             this_.isEstimating = false;
-                            this_.estimatedPrice = Math.round(response.price * 100) / 100;
+                            this_.estimatedPrice = Math.round(response.price);
                         },
                         error: function (jqXHR, e) {
                             this_.isEstimating = false;

@@ -10,8 +10,7 @@ function resolve(dir) {
 
 module.exports = {
     entry: {
-        index: './static/index.js',
-        // spartan: './static/spartan/app.js'
+        index: ['babel-polyfill', './static/index.js'],
     },
     output: {
         filename: "[name].js",

@@ -326,7 +326,8 @@
     }
 
     .filter-distance {
-        width: 8em;
+        margin-left: 0.5em;
+        width: 7.4em;
     }
 
     .filter-distance-type {
