@@ -54,8 +54,8 @@ def estimate_flat(
         'kitchen_area': prepare_feature(average_data, 'kitchen_area', kitchen_area, float),
         'living_area': prepare_feature(average_data, 'living_area', living_area, float),
         'repair': repair,
-        'rooms':  prepare_feature(average_data, 'rooms', rooms, int),
-        'underground_name':  underground_name.lower(),
+        'rooms': prepare_feature(average_data, 'rooms', rooms, int),
+        'underground_name': underground_name.lower(),
         'has_balcony': has_to_int(has_balcony),
         'has_loggia': has_to_int(has_loggia),
         'curr_floor': prepare_feature(average_data, 'curr_floor', curr_floor, int),
@@ -64,7 +64,7 @@ def estimate_flat(
         'underground_way': -1 if underground_way == 'пешком' else 1,
         'underground_time': prepare_feature(average_data, 'underground_time', underground_time, int)
     }
-    print(features)
+    #rint(features)
     data = pd.DataFrame(features, index=[0])
     data, metro_le_encoder = encode_with_OneHotEncoder_and_delete_column(data,'underground_name')
     data, house_type_le_encoder = encode_with_OneHotEncoder_and_delete_column(data,'house_type')
@@ -81,10 +81,9 @@ def estimate_flat(
     flat = flat.append(data)
     flat = flat.fillna(0)
     price = 0
-    print("NEW")
     # TODO: different amount of features sometimes
     try:
-        price = round(np.exp(clf.predict(flat).tolist()[0]))
+        price = round(clf.predict(flat).tolist()[0])
     except:
         raise NameError('SmthWentWrong')
     return price
