@@ -1,6 +1,6 @@
 # import sys
 # sys.path.append('.')
-from .features_extractor.utils import centered_subways, encode_with_OneHotEncoder_and_delete_column, encode_with_LabelEncoder, perform_coding_and_delete_column
+from features_extractor.utils import centered_subways, encode_with_OneHotEncoder_and_delete_column, encode_with_LabelEncoder, perform_coding_and_delete_column
 from sklearn.externals import joblib
 import pandas as pd
 import os
@@ -21,7 +21,7 @@ def prepare_feature(average_data, label, feature, type):
             return -1
     try:
         feature = type(feature)
-    except TypeError:
+    except (TypeError, ValueError):
         feature = None
     return type(feature) if feature is not None else type(average_data[label])
 
@@ -53,7 +53,7 @@ def estimate_flat(
         'house_type': house_type,
         'kitchen_area': prepare_feature(average_data, 'kitchen_area', kitchen_area, float),
         'living_area': prepare_feature(average_data, 'living_area', living_area, float),
-        'repair': repair,
+        'repair': 'отсутствует' if repair is None else repair,
         'rooms': prepare_feature(average_data, 'rooms', rooms, int),
         'underground_name': underground_name.lower(),
         'has_balcony': has_to_int(has_balcony),
