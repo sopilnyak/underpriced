@@ -158,8 +158,8 @@
                 <span class="price-text">Предсказанная цена:</span>
                 <span class="price-number">{{ $parent.formatPrice(estimatedPrice) }} рублей в месяц</span>
                 <div>
-                    <span class="shareVKEstimate" v-html="shareButtonVK"></span>
-                    <span class="shareFBEstimate" v-html="shareButtonFB"></span>
+                    <span class="shareVKEstimate" v-html="$parent.shareButtonVK"></span>
+                    <span class="shareFBEstimate" v-html="$parent.shareButtonFB"></span>
                 </div>
             </div>
         </div>
