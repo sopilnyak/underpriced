@@ -1,27 +1,46 @@
 <template>
     <div class="estimate">
-        <div v-if="isNotLoaded">
+        <list-header></list-header>
+        <div v-if="isNotLoaded" :key="'notloaded'">
             <g-loading></g-loading>
         </div>
-        <div v-else class="filters">
+        <div v-else class="filters" :key="'loaded'">
+            <span class="shareFB" v-html="shareButtonFB"></span>
+            <span class="shareVK" v-html="shareButtonVK"></span>
             <div class="header">
                 Введите параметры своей квартиры, и мы оценим примерную стоимость ее аренды.
             </div>
             <form class="estimate-input">
                 <div class="input-block underground">
                     <div class="input-label">Метро</div>
-                    <input v-on:keyup.enter="postEstimate" v-validate="'required'" name="underground"
-                           v-model="filterSubway" ref="underground" class="underground-input">
-                    <span v-show="errors.has('underground')" class="error-message">
-                        {{ errors.first('underground') }}
+                    <input v-on:keyup.enter="postEstimate" v-validate="'required'" name="underground_name"
+                           v-model="filterSubway" ref="underground_name" class="underground-input">
+                    <span v-show="errors.has('underground_name')" class="error-message">
+                        {{ errors.first('underground_name') }}
                     </span>
                     <div class="subway-list"
-                         :class="{ 'subway-list-hidden': this.filterSubway === '' || this.isSubwaySelected !== null }" >
+                         :class="{ 'subway-list-hidden': this.filterSubway === '' || this.selectedSubway !== null }" >
                         <div v-for="subway in subwayList" class="subway-list-entry"
                              @click="selectSubway(subway.name)">
                             {{ subway.name }}
                         </div>
                     </div>
+                </div>
+                <div class="input-block underground-time">
+                    <div class="input-label">Минут до метро</div>
+                    <input v-on:keyup.enter="postEstimate" class="underground-time-input"
+                           v-validate="{ required: true, numeric: true, not_in: [0] }" name="underground_time"
+                           ref="underground_time">
+                    <span v-show="errors.has('underground_time')" class="error-message">
+                        {{ errors.first('underground_time') }}
+                    </span>
+                </div>
+                <div class="input-block">
+                    <div class="input-label underground_way">&nbsp;</div>
+                    <select ref="underground_way" class="underground_way-input">
+                        <option value="пешком" selected>пешком</option>
+                        <option value="на машине">на транспорте</option>
+                    </select>
                 </div>
                 <div class="input-block">
                     <div class="input-label rooms">Кол-во комнат</div>
@@ -61,6 +80,7 @@
                         {{ errors.first('living-area') }}
                     </span>
                 </div>
+                <br>
                 <div class="input-block repair">
                     <div class="input-label">Ремонт</div>
                     <select ref="repair" class="repair-input">
@@ -70,19 +90,30 @@
                         <option value="отсутствует">Отсутствует</option>
                     </select>
                 </div>
-                <br>
                 <div class="input-block has-balcony">
                     <div class="input-label">Наличие балкона</div>
                     <select ref="has_balcony" class="has-balcony-input">
-                        <option value="да" selected>Да</option>
-                        <option value="нет">Нет</option>
+                        <option value="да">Да</option>
+                        <option value="нет" selected>Нет</option>
                     </select>
                 </div>
                 <div class="input-block has-loggia">
                     <div class="input-label">Наличие лоджии</div>
                     <select ref="has_loggia" class="has-loggia-input">
-                        <option value="да">Да</option>
-                        <option value="нет" selected>Нет</option>
+                        <option value="да" selected>Да</option>
+                        <option value="нет">Нет</option>
+                    </select>
+                </div>
+                <div class="input-block house-type">
+                    <div class="input-label">Тип дома</div>
+                    <select ref="house_type" class="house-type-input">
+                        <option value="панельный" selected>Панельный</option>
+                        <option value="блочный">Блочный</option>
+                        <option value="кирпичный">Кирпичный</option>
+                        <option value="монолитный">Монолитный</option>
+                        <option value="кирпично-монолитный">Кирпично-монолитный</option>
+                        <option value="сталинский">Сталинский</option>
+                        <option value="старый фонд">Старый фонд</option>
                     </select>
                 </div>
                 <div class="input-block curr-floor">
@@ -112,18 +143,6 @@
                         {{ errors.first('construction-year') }}
                     </span>
                 </div>
-                <div class="input-block house-type">
-                    <div class="input-label">Тип дома</div>
-                    <select ref="house_type" class="house-type-input">
-                        <option value="панельный" selected>Панельный</option>
-                        <option value="блочный">Блочный</option>
-                        <option value="кирпичный">Кирпичный</option>
-                        <option value="монолитный">Монолитный</option>
-                        <option value="кирпично-монолитный">Кирпично-монолитный</option>
-                        <option value="сталинский">Сталинский</option>
-                        <option value="старый фонд">Старый фонд</option>
-                    </select>
-                </div>
                 <br>
             </form>
             <div class="post-estimate">
@@ -135,9 +154,13 @@
             <div v-if="isEstimating">
                 <g-loading></g-loading>
             </div>
-            <div v-if="isEstimated && !isEstimating" class="price">
+            <div v-if="isEstimated && !isEstimating && !hasBackendErrors && !hasFormErrors" class="price">
                 <span class="price-text">Предсказанная цена:</span>
-                <span class="price-number">{{ estimatedPrice }} рублей</span>
+                <span class="price-number">{{ formatPrice(estimatedPrice) }} рублей в месяц</span>
+                <div>
+                    <span class="shareVKEstimate" v-html="shareButtonVK"></span>
+                    <span class="shareFBEstimate" v-html="shareButtonFB"></span>
+                </div>
             </div>
         </div>
     </div>
@@ -145,18 +168,20 @@
 
 <script>
     import GLoading from "./GLoading.vue"
+    import ListHeader from './ListHeader.vue'
     import ru from '../resources/validation.js';
 
     export default {
         name: 'Estimate',
         components: {
-            GLoading
+            GLoading,
+            ListHeader
         },
         data: function () {
             return {
                 subways: null,
                 filterSubway: "",
-                isSubwaySelected: null,
+                selectedSubway: null,
                 estimatedPrice: null,
                 hasFormErrors: false,
                 isEstimating: false,
@@ -169,13 +194,14 @@
             this.$validator.localize('ru', {
                 messages: ru.messages,
                 attributes: {
-                    'underground': '"Метро"',
+                    'underground_name': '"Метро"',
                     'area': '"Общая площадь"',
                     'kitchen-area': '"Площадь кухни"',
                     'living-area': '"Жилая площадь"',
                     'curr-floor': '"Этаж"',
                     'total-floor': '"Этажей в доме"',
                     'construction-year': '"Год постройки дома"',
+                    'underground_time': '"Минут до метро"',
               }
             });
         },
@@ -197,6 +223,14 @@
             },
             isEstimated() {
                 return this.estimatedPrice !== null;
+            },
+            shareButtonVK() {
+                return VK.Share.button({ url: "http://underpriced.ru/"}, {type: "round", text: "Поделиться" });
+            },
+            shareButtonFB() {
+                return '<iframe class="fb-iframe" src="https://www.facebook.com/plugins/share_button.php?href=http%3A%2F%2Funderpriced.ru&layout=button_count&size=small&mobile_iframe=true&width=68&height=20&appId" ' +
+                    'width="68" height="20" style="border:none;overflow:hidden" scrolling="no" frameborder="0" ' +
+                    'allowTransparency="true"></iframe>'
             }
         },
         methods: {
@@ -228,22 +262,24 @@
                         type: 'POST',
                         data: {
                             area: this_.formatFloat(this.$refs.area.value),
-                            combined_bathroom_count: 1,
+                            combined_bathroom_count: "",
                             construction_year: this.$refs.construction_year.value,
                             house_type: this.$refs.house_type.value,
                             kitchen_area: this_.formatFloat(this.$refs.kitchen_area.value),
                             living_area: this_.formatFloat(this.$refs.living_area.value),
                             repair: this.$refs.repair.value,
                             rooms: this.$refs.rooms.value,
-                            underground: this.$refs.underground.value,
+                            underground_name: this.$refs.underground_name.value,
                             has_balcony: this.$refs.has_balcony.value,
                             has_loggia: this.$refs.has_loggia.value,
                             curr_floor: this.$refs.curr_floor.value,
-                            total_floor: this.$refs.total_floor.value
+                            total_floor: this.$refs.total_floor.value,
+                            underground_way: this.$refs.underground_way.value,
+                            underground_time: this.$refs.underground_time.value,
                         },
                         success: function (response) {
                             this_.isEstimating = false;
-                            this_.estimatedPrice = Math.round(response.price * 100) / 100;
+                            this_.estimatedPrice = Math.round(response.price);
                         },
                         error: function (jqXHR, e) {
                             this_.isEstimating = false;
@@ -258,7 +294,7 @@
             },
             selectSubway(subway) {
                 this.filterSubway = subway;
-                this.isSubwaySelected = subway;
+                this.selectedSubway = subway;
             },
             getCurrentYear() {
                 return (new Date()).getFullYear();
@@ -274,20 +310,26 @@
                 this.$refs.construction_year.value = "";
                 this.$refs.kitchen_area.value = "";
                 this.$refs.living_area.value = "";
-                this.$refs.underground.value = "";
+                this.filterSubway = "";
+                this.$refs.underground_name.value = "";
                 this.$refs.curr_floor.value = "";
                 this.$refs.total_floor.value = "";
+                this.$refs.underground_way.value = "";
+                this.$refs.underground_time.value = "";
                 this.hasFormErrors = false;
                 this.isEstimating = false;
-                this.isEstimated = false;
-                this.hasBackendErrors = null;
+                this.estimatedPrice = null;
+                this.hasBackendErrors = false;
                 this.errors.clear();
+            },
+            formatPrice(price) {
+                return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
             }
         },
         watch: {
             filterSubway: function (query) {
-                if (query !== this.isSubwaySelected) {
-                    this.isSubwaySelected = null;
+                if (query !== this.selectedSubway) {
+                    this.selectedSubway = null;
                 }
             }
         }
@@ -306,6 +348,7 @@
         max-height: 300px;
         overflow: hidden;
         width: 13.3em;
+        z-index: 4;
     }
     .header {
         font-size: 20px;
@@ -317,7 +360,7 @@
         width: 11.7em;
         text-align: center;
         margin-right: 0.5em;
-        margin-bottom: 3em;
+        margin-bottom: 1em;
     }
     .button-clear {
         width: 11.7em;
@@ -325,14 +368,13 @@
         background-color: rgba(140,154,182,0.41);
         border-color: rgba(140,154,182,0.31);
         color: inherit;
-        margin-bottom: 3em;
+        margin-bottom: 1em;
     }
     .post-estimate {
         margin-top: 20px;
         margin-left: 100px;
     }
     .price {
-        margin-top: 20px;
         margin-left: 100px;
         font-size: 30px;
     }
@@ -361,6 +403,12 @@
     .underground-input {
         width: 11em !important;
     }
+    .underground-time {
+        width: 7.6em;
+    }
+    .underground-time-input {
+        width: 5em !important;
+    }
     .rooms {
         width: 12em;
     }
@@ -383,16 +431,16 @@
         width: 7em;
     }
     .repair {
-        width: 11em;
+        width: 11.4em;
     }
     .repair-input {
-        width: 11em;
+        width: 10em;
     }
     .has-balcony {
-        width: 14em;
+        width: 10.2em;
     }
     .has-balcony-input {
-        width: 12.4em !important;
+        width: 8.8em !important;
     }
     .has-loggia {
         width: 12.1em;
@@ -404,7 +452,7 @@
         width: 7em !important;
     }
     .total-floor {
-        width: 9.9em;
+        width: 10em;
     }
     .total-floor-input {
         width: 7em;
@@ -416,10 +464,10 @@
         width: 7em !important;
     }
     .house-type {
-        width: 11em;
+        width: 12.15em;
     }
     .house-type-input {
-        width: 11em;
+        width: 10.65em;
     }
     .input-block {
         margin-top: 15px;
@@ -442,7 +490,14 @@
     }
     .error-message-big {
         color: red;
-        margin-top: 15px;
         margin-left: 100px;
+    }
+    .shareVKEstimate {
+        float: left;
+        margin-top: 11px;
+        margin-right: 10px;
+    }
+    .shareFBEstimate {
+        float: left;
     }
 </style>

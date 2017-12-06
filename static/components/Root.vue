@@ -1,7 +1,6 @@
 <template>
     <div id="main" class="content">
         <g-header></g-header>
-        <list-header></list-header>
         <router-view></router-view>
         <g-footer></g-footer>
     </div>
@@ -11,13 +10,11 @@
     import GHeader from './GHeader.vue'
     import GFooter from './GFooter.vue'
     import GLoading from './GLoading.vue'
-    import ListHeader from './ListHeader.vue'
 
     export default {
         name: 'main',
         components: {
             GHeader,
-            ListHeader,
             GFooter,
             GLoading
         }
@@ -37,7 +34,7 @@
         font-family: "Open Sans", Helvetica;
         font-size: 14px;
         background-color: #EDEFF1;
-        min-width: 1100px;
+        min-width: 1250px;
     }
 
     .content {
@@ -164,7 +161,7 @@
 
     .entry {
         display: block;
-        margin: 20px 0;
+        margin: 20px 30px 20px 0;
         border: 1px solid #375084;
         -webkit-border-radius: 2px;
         padding: 20px 30px;
@@ -207,23 +204,23 @@
         clear: both;
     }
 
-    .actual-price {
+    .predicted-price {
         font-size: 30px;
         color: #424445;
     }
 
-    .actual-price-hint {
+    .predicted-price-hint {
         color: gray;
         font-size: 18px;
         margin-left: 2px;
     }
 
-    .predicted-price-title {
+    .actual-price-title {
         color: gray;
         font-size: inherit;
     }
 
-    .predicted-price-hint {
+    .actual-price-hint {
         color: gray;
         font-size: 15px;
     }
@@ -273,6 +270,7 @@
     }
 
     .sort-container {
+        display: inline-block;
         padding: 0.3em 0 0 0.5em;
         height: 2em;
         font-weight: bold;
@@ -287,6 +285,55 @@
     .pagination-block {
         width: 100%;
         overflow: hidden;
+    }
+
+    .shareFB {
+        float: right;
+        margin-right: 30px;
+        display: block;
+    }
+
+    .shareVK {
+        float: right;
+        margin-right: 10px;
+    }
+
+    .fb-iframe {
+        width: 105px !important;
+    }
+
+    .dropdown-hidden {
+        display: none;
+    }
+
+    .dropdown {
+        display: block;
+        position: absolute;
+        margin-top: 5px;
+    }
+
+    .dropdown-entry {
+        width: 16.3em;
+        padding: 5px 10px;
+        background-color: rgba(217,219,221,0.70);
+    }
+
+    .dropdown-entry:hover {
+        background-color: #8C9AB6;
+        color: #ffffff;
+    }
+
+    .filter-underground {
+        width: 8em;
+    }
+
+    .filter-distance {
+        margin-left: 0.5em;
+        width: 7.4em;
+    }
+
+    .filter-distance-type {
+        margin-left: 0.7em;
     }
 
 </style>
