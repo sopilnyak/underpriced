@@ -10,7 +10,27 @@
 
 <script>
     export default {
-        name: 'GLoading'
+        name: 'GLoading',
+        mounted() {
+            $(document).ready(function() {
+            function runAnimation() {
+                let loadingLeft = $('.loading-1');
+                loadingLeft.animate({opacity:'1'}, 600);
+                loadingLeft.animate({opacity:'0.5'}, 600, runAnimation);
+            setTimeout(function() {
+                let loadingCenter = $('.loading-2');
+                loadingCenter.animate({opacity: '1'}, 600);
+                loadingCenter.animate({opacity: '0.5'}, 600, runAnimation);
+                }, 300);
+            setTimeout(function() {
+                let loadingRight = $('.loading-3');
+                loadingRight.animate({opacity: '1'}, 600);
+                loadingRight.animate({opacity: '0.5'}, 600, runAnimation);
+                }, 600);
+            }
+            runAnimation();
+        });
+        }
     }
 </script>
 
@@ -20,21 +40,23 @@
         display: inline-block;
         width: 20px;
         height: 20px;
-        background: rgba(55,80,132,0.72);
+        background: rgba(55,80,132,1.0);
     }
 
     .loading-2 {
         display: inline-block;
         width: 20px;
         height: 20px;
-        background: rgba(55,80,132,0.52);
+        background: rgba(55,80,132,1.0);
+        opacity: 0.5;
     }
 
     .loading-3 {
         display: inline-block;
         width: 20px;
         height: 20px;
-        background: rgba(55,80,132,0.32);
+        background: rgba(55,80,132,1.0);
+        opacity: 0.3;
     }
 
     .loading {
