@@ -1,47 +1,52 @@
 <template>
-    <div class="landing" :key="'loading'">
-        <div v-if="isNotLoaded">
-            <g-loading></g-loading>
-        </div>
-        <div :key="'landing'" v-else>
-            <div class="landing-left">
-                <div class="landing-intro-text">
+    <div>
+        <landing-header></landing-header>
+        <div class="landing" :key="'loading'">
+            <div v-if="isNotLoaded">
+                <g-loading></g-loading>
+            </div>
+            <div :key="'landing'" v-else>
+                <div class="landing-left">
+                    <div class="landing-intro-text">
 
-                    <div class="landing-main">Найдите недооцененные квартиры</div>
-                    <div class="landing-sub">При помощи нашего сервиса вы можете найти квартиры, цена аренды
-                        которых занижена или завышена.
-                    </div>
-                    <div class="landing-button" @click="clickUnderpriced">
-                        Перейти к списку объявлений
+                        <div class="landing-main">Найдите недооцененные и переоцененные квартиры</div>
+                        <div class="landing-sub">При помощи нашего сервиса вы можете найти квартиры, цена аренды
+                            которых занижена или завышена
+                        </div>
+                        <div class="landing-button" @click="clickUnderpriced">
+                            Перейти к списку объявлений
+                        </div>
+
                     </div>
 
+                    <div class="landing-intro-text">
+
+                        <div class="landing-main">Оцените свою квартиру</div>
+                        <div class="landing-sub">Узнайте, сколько стоит аренда вашей квартиры</div>
+                        <div class="landing-button" @click="clickEstimate">
+                            Оценить квартиру
+                        </div>
+
+                    </div>
                 </div>
-
-                <div class="landing-intro-text">
-
-                    <div class="landing-main">Оцените свою квартиру</div>
-                    <div class="landing-sub">Узнайте, сколько стоит аренда вашей квартиры.</div>
-                    <div class="landing-button" @click="clickEstimate">
-                        Оценить квартиру
-                    </div>
-
+                <div class="landing-right">
+                    <img @click="clickUnderpriced" class="image" src="/static/icons/screen_main.png" />
                 </div>
             </div>
-            <div class="landing-right">
-                <img class="image" src="/static/icons/screen_main.png" />
-            </div>
-        </div>
 
+        </div>
     </div>
 </template>
 
 <script>
     import GLoading from "./GLoading.vue"
+    import LandingHeader from './LandingHeader.vue'
 
     export default {
         name: 'Landing',
         components: {
-            GLoading
+            GLoading,
+            LandingHeader,
         },
         created() {
             this.$store.state.active = 'landing';

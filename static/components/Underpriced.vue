@@ -1,5 +1,6 @@
 <template>
     <div class="underpriced">
+        <list-header></list-header>
         <div v-if="isNotLoaded">
             <g-loading></g-loading>
         </div>
@@ -11,14 +12,35 @@
                 <option value="3">3</option>
                 <option value="4">4</option>
                 <option value="5">5</option>
-                <option value="-1">Студия</option>
+                <option value="студия">Студия</option>
             </select>
-            <input v-model="filterQueries['underground']" placeholder="Поиск по метро...">
-            <input v-model="filterQueries['address']" placeholder="Поиск по адресу...">
-            <span class="sort-container">
+            <input class="filter-underground" v-model="filterQueries['underground']" placeholder="Поиск по метро...">
+            Не более
+            <input class="filter-distance" v-model="filterQueries['distance']" placeholder="время до метро"> минут
+            <select class="filter-distance-type" v-model="filterQueries['distance_type']">
+                <option selected value="">на чем угодно</option>
+                <option value="пешком">пешком</option>
+                <option value="на машине">на транспорте</option>
+            </select>
+            <div class="sort-container">
+                <span class="folders-head-sort">
+                    <span @click="setDropdownVisibility()">По {{ sortFieldText }}</span>
+                    <span @click="changeSortDirection" class="filter"> {{ sortDirectionSign }} </span>
+                </span>
+                <div :class="{ 'dropdown-hidden': isDropdownHidden, 'dropdown': !isDropdownHidden }">
+                    <div class="dropdown-entry" @click="sortBy('price')">По реальной цене</div>
+                    <div class="dropdown-entry" @click="sortBy('estimated_price')">По нашей оценке</div>
+                    <div class="dropdown-entry" @click="sortBy('relative_goodness')" title="Сортировать по соотношению реальной и предсказанной цен">
+                        По соотношению
+                    </div>
+                </div>
+            </div>
+            <!--<span class="sort-container">
                 <span @click="changeSortDirection">Сортировать по цене</span>
                 <span @click="changeSortDirection" class="filter"> {{ sortDirectionSign }} </span>
-            </span>
+            </span>-->
+            <span class="shareFB" v-html="$parent.shareButtonFB"></span>
+            <span class="shareVK" v-html="$parent.shareButtonVK"></span>
 
             <paginate
                     name="flats"
@@ -26,7 +48,7 @@
                       :per="20">
                 <div v-for="flat in paginated('flats')" class="entry">
                     <div class="image-column">
-                        <div :style="{ backgroundImage: 'url(' + flat.images[0] + ')' }" class="flat-image"></div>
+                        <div :style="{ backgroundImage: 'url(' + $parent.getImage(flat) + '), url(\'/static/icons/default_flat.png\')' }" class="flat-image"></div>
                     </div>
                     <div class="first-column">
                         <span class="subway">м. {{ Object.keys(flat.underground)[0] }}</span><br>
@@ -48,13 +70,13 @@
                         <span class="external">{{ flat.address }}</span><br>
                     </div>
                     <div class="third-column">
-                        <span class="actual-price">{{ flat.price.rub_price }}</span>
+                        <span title="Реальная цена объявления" class="actual-price">{{ $parent.formatPrice(flat.price.rub_price) }}</span>
                         <span class="actual-price-hint">руб. / месяц</span><br>
-                        <!--<span class="predicted-price-title">Предсказанная цена:</span>-->
-                        <!--<span class="predicted-price">{{ flat.predicted_price }}</span>-->
-                        <!--<span class="predicted-price-hint">руб. / месяц</span><br>-->
+                        <span class="predicted-price-title">По нашей оценке:</span>
+                        <span class="predicted-price">{{ $parent.formatPrice(flat.estimated_price) }}</span>
+                        <span class="predicted-price-hint">руб. / месяц</span><br>
                         <a :href="flat.url" target="_blank" class="button">Перейти к объявлению</a><br>
-                        <a :href="flat.url" target="_blank" class="source">cian.ru</a>
+                        <a :href="flat.url" title="Источник объявления" target="_blank" class="source">cian.ru</a>
                     </div>
                     <br>
                 </div>
@@ -71,24 +93,27 @@
 
 <script>
     import GLoading from "./GLoading.vue"
+    import ListHeader from './ListHeader.vue'
 
     export default {
         name: 'Underpriced',
         components: {
-            GLoading
+            GLoading,
+            ListHeader
         },
         data: function () {
             return {
-                filterRooms: "",
-                filterSubway: "",
-                filterDistrict: "",
                 filterQueries: {
                     rooms: "",
                     underground: "",
-                    address: ""
+                    address: "",
+                    distance: "",
+                    distance_type: "",
                 },
                 paginate: ['flats'],
                 sortDirection: 1,
+                sortField: "price",
+                isDropdownHidden: true,
             }
         },
         created() {
@@ -107,13 +132,30 @@
                         function (flat) {
                             let filter = true;
                             filterFields.forEach(function(field) {
-                                if (flat[field] === null) {
-                                    filter = false;
-                                }
-                                if (field === 'underground' && Object.keys(flat.underground)[0] !== undefined) {
-                                    filter = filter && Object.keys(flat.underground)[0].toString().toLowerCase()
-                                        .indexOf(this_.filterQueries[field].toLowerCase()) !== -1;
-                                } else {
+                                switch (field) {
+                                case 'distance':
+                                    if (Object.keys(flat.underground)[0] !== undefined) {
+                                        let distance = flat.underground[Object.keys(flat.underground)[0]].match(/\d+/)[0];
+                                        filter = filter && (this_.filterQueries['distance'] === "" ||
+                                            parseInt(distance) <= parseInt(this_.filterQueries['distance']));
+                                    }
+                                    break;
+                                case 'distance_type':
+                                    if (Object.keys(flat.underground)[0] !== undefined) {
+                                        filter = filter && flat.underground[Object.keys(flat.underground)[0]].toString().toLowerCase()
+                                            .indexOf(this_.filterQueries['distance_type'].toLowerCase()) !== -1;
+                                    }
+                                    break;
+                                case 'underground':
+                                    if (Object.keys(flat.underground)[0] !== undefined) {
+                                        filter = filter && Object.keys(flat.underground)[0].toString().toLowerCase()
+                                            .indexOf(this_.filterQueries[field].toLowerCase()) !== -1;
+                                    }
+                                    break;
+                                default:
+                                    if (flat[field] === null) {
+                                        filter = false;
+                                    }
                                     if (flat.hasOwnProperty(field)) {
                                         filter = filter && flat[field].toString().toLowerCase()
                                             .indexOf(this_.filterQueries[field].toLowerCase()) !== -1;
@@ -125,13 +167,18 @@
                     )
                     .sort(
                         function (a, b) {
-                            let value1 = parseInt(a.price.rub_price);
-                            let value2 = parseInt(b.price.rub_price);
-
-                            if (value1 === null || value2 === null || value1 === value2) {
-                                return this_.sortDirection
+                            let sortField = this_.sortField;
+                            let sortDirection = this_.sortDirection;
+                            let value1 = parseInt(a[sortField]);
+                            let value2 = parseInt(b[sortField]);
+                            if (sortField === "price") {
+                                value1 = parseInt(a.price.rub_price);
+                                value2 = parseInt(b.price.rub_price);
                             }
-                            return ((value1 < value2) ? -1 : 1) * this_.sortDirection;
+                            if (value1 === null || value2 === null || value1 === value2) {
+                                return sortDirection;
+                            }
+                            return ((value1 < value2) ? -1 : 1) * sortDirection;
                         }
                     );
             },
@@ -142,10 +189,29 @@
                     return '▼';
                 }
             },
+            sortFieldText() {
+                if (this.sortField === 'price') {
+                    return 'реальной цене';
+                }
+                if (this.sortField === 'estimated_price') {
+                    return 'нашей оценке';
+                }
+                if (this.sortField === 'relative_goodness') {
+                    return 'соотношению';
+                }
+                return '';
+            }
         },
         methods: {
             changeSortDirection() {
                 this.sortDirection *= -1
+            },
+            sortBy(field) {
+                this.sortField = field;
+                this.isDropdownHidden = true;
+            },
+            setDropdownVisibility() {
+                this.isDropdownHidden = !this.isDropdownHidden;
             },
         }
     }

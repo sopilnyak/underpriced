@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VuePaginate from 'vue-paginate'
-import VeeValidate from 'vee-validate';
+import VeeValidate from 'vee-validate'
 
 /* '@' is alias for static directory */
 import Root from '@/components/Root.vue'

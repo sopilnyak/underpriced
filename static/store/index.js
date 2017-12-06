@@ -20,7 +20,7 @@ export default new Vuex.Store({
     actions: {
         loadUnderpriced({commit}) {
             $.ajax({
-                url: '/flats/',
+                url: '/flats/underpriced/',
                 type: 'GET',
                 dataType: 'json',
                 success: function (response) {
@@ -33,7 +33,7 @@ export default new Vuex.Store({
         },
         loadOverpriced({commit}) {
             $.ajax({
-                url: '/static/data/flats.json',
+                url: 'flats/overpriced/',
                 type: 'GET',
                 dataType: 'json',
                 success: function (response) {
