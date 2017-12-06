@@ -48,7 +48,7 @@
                       :per="20">
                 <div v-for="flat in paginated('flats')" class="entry">
                     <div class="image-column">
-                        <div :style="{ backgroundImage: 'url(' + getImage(flat) + '), url(\'/static/icons/default_flat.jpg\')' }" class="flat-image"></div>
+                        <div :style="{ backgroundImage: 'url(' + getImage(flat) + '), url(\'/static/icons/default_flat.png\')' }" class="flat-image"></div>
                     </div>
                     <div class="first-column">
                         <span class="subway">м. {{ Object.keys(flat.underground)[0] }}</span><br>
@@ -228,7 +228,7 @@
                 return this.formatPrice(parseInt(price) + parseInt(Math.random() * 10000));
             },
             getImage(flat) {
-                return flat.images[0] !== undefined ? flat.images[0] : '/static/icons/default_flat.jpg';
+                return flat.images[0] !== undefined ? flat.images[0] : '/static/icons/default_flat.png';
             },
         }
     }
