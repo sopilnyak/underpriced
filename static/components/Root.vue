@@ -17,6 +17,24 @@
             GHeader,
             GFooter,
             GLoading
+        },
+        computed: {
+            shareButtonVK() {
+                return VK.Share.button({ url: "http://underpriced.ru/"}, {type: "round", text: "Поделиться" });
+            },
+            shareButtonFB() {
+                return '<iframe class="fb-iframe" src="https://www.facebook.com/plugins/share_button.php?href=http%3A%2F%2Funderpriced.ru&layout=button_count&size=small&mobile_iframe=true&width=68&height=20&appId" ' +
+                    'width="68" height="20" style="border:none;overflow:hidden" scrolling="no" frameborder="0" ' +
+                    'allowTransparency="true"></iframe>'
+            },
+        },
+        methods: {
+            formatPrice(price) {
+                return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+            },
+            getImage(flat) {
+                return flat.images[0] !== undefined ? flat.images[0] : '/static/icons/default_flat.jpg';
+            },
         }
     }
 </script>
@@ -204,23 +222,23 @@
         clear: both;
     }
 
-    .predicted-price {
+    .actual-price {
         font-size: 30px;
         color: #424445;
     }
 
-    .predicted-price-hint {
+    .actual-price-hint {
         color: gray;
         font-size: 18px;
         margin-left: 2px;
     }
 
-    .actual-price-title {
+    .predicted-price-title {
         color: gray;
         font-size: inherit;
     }
 
-    .actual-price-hint {
+    .predicted-price-hint {
         color: gray;
         font-size: 15px;
     }
@@ -289,12 +307,14 @@
 
     .shareFB {
         float: right;
+        margin-top: 4px;
         margin-right: 30px;
         display: block;
     }
 
     .shareVK {
         float: right;
+        margin-top: 4px;
         margin-right: 10px;
     }
 
