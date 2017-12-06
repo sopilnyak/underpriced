@@ -33,7 +33,7 @@
                 return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
             },
             getImage(flat) {
-                return flat.images[0] !== undefined ? flat.images[0] : '/static/icons/default_flat.jpg';
+                return flat.images[0] !== undefined ? flat.images[0] : '/static/icons/default_flat.png';
             },
         }
     }
