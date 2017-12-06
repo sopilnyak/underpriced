@@ -1,5 +1,6 @@
 <template>
     <div class="underpriced">
+        <list-header></list-header>
         <div v-if="isNotLoaded">
             <g-loading></g-loading>
         </div>
@@ -11,7 +12,7 @@
                 <option value="3">3</option>
                 <option value="4">4</option>
                 <option value="5">5</option>
-                <option value="-1">Студия</option>
+                <option value="студия">Студия</option>
             </select>
             <input class="filter-underground" v-model="filterQueries['underground']" placeholder="Поиск по метро...">
             Не более
@@ -92,16 +93,18 @@
 
 <script>
     import GLoading from "./GLoading.vue"
+    import ListHeader from './ListHeader.vue'
 
     export default {
         name: 'Underpriced',
         components: {
-            GLoading
+            GLoading,
+            ListHeader
         },
         data: function () {
             return {
                 filterQueries: {
-                    rooms_number: "",
+                    rooms: "",
                     underground: "",
                     address: "",
                     distance: "",

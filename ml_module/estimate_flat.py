@@ -1,6 +1,6 @@
 # import sys
 # sys.path.append('.')
-from features_extractor.utils import centered_subways, encode_with_OneHotEncoder_and_delete_column, encode_with_LabelEncoder, perform_coding_and_delete_column
+from .features_extractor.utils import centered_subways, encode_with_OneHotEncoder_and_delete_column, encode_with_LabelEncoder, perform_coding_and_delete_column
 from sklearn.externals import joblib
 import pandas as pd
 import os

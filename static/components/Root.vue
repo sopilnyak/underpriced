@@ -1,7 +1,6 @@
 <template>
     <div id="main" class="content">
         <g-header></g-header>
-        <list-header></list-header>
         <router-view></router-view>
         <g-footer></g-footer>
     </div>
@@ -11,13 +10,11 @@
     import GHeader from './GHeader.vue'
     import GFooter from './GFooter.vue'
     import GLoading from './GLoading.vue'
-    import ListHeader from './ListHeader.vue'
 
     export default {
         name: 'main',
         components: {
             GHeader,
-            ListHeader,
             GFooter,
             GLoading
         }
