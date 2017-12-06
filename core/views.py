@@ -23,12 +23,14 @@ def get_flat(request, id):
 
 
 def get_underpriced_list(request):
-    flat_list = list(flats.find({"$where": "this.estimated_price > this.price.rub_price"}).limit(flat_limit))
+    flat_list = list(flats.find({"$where": "this.estimated_price > this.price.rub_price && "
+                                           "this.price.rub_price > 20000"}).limit(flat_limit))
     return JsonResponse(flat_list, safe=False)
 
 
 def get_overpriced_list(request):
-    flat_list = list(flats.find({"$where": "this.estimated_price < this.price.rub_price"}).limit(flat_limit))
+    flat_list = list(flats.find({"$where": "this.estimated_price < this.price.rub_price && "
+                                           "this.price.rub_price > 20000"}).limit(flat_limit))
     return JsonResponse(flat_list, safe=False)
 
 

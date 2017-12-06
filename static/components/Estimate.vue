@@ -5,8 +5,8 @@
             <g-loading></g-loading>
         </div>
         <div v-else class="filters" :key="'loaded'">
-            <span class="shareFB" v-html="shareButtonFB"></span>
-            <span class="shareVK" v-html="shareButtonVK"></span>
+            <span class="shareFB" v-html="$parent.shareButtonFB"></span>
+            <span class="shareVK" v-html="$parent.shareButtonVK"></span>
             <div class="header">
                 Введите параметры своей квартиры, и мы оценим примерную стоимость ее аренды.
             </div>
@@ -156,10 +156,10 @@
             </div>
             <div v-if="isEstimated && !isEstimating && !hasBackendErrors && !hasFormErrors" class="price">
                 <span class="price-text">Предсказанная цена:</span>
-                <span class="price-number">{{ formatPrice(estimatedPrice) }} рублей в месяц</span>
+                <span class="price-number">{{ $parent.formatPrice(estimatedPrice) }} рублей в месяц</span>
                 <div>
-                    <span class="shareVKEstimate" v-html="shareButtonVK"></span>
-                    <span class="shareFBEstimate" v-html="shareButtonFB"></span>
+                    <span class="shareVKEstimate" v-html="$parent.shareButtonVK"></span>
+                    <span class="shareFBEstimate" v-html="$parent.shareButtonFB"></span>
                 </div>
             </div>
         </div>
@@ -223,14 +223,6 @@
             },
             isEstimated() {
                 return this.estimatedPrice !== null;
-            },
-            shareButtonVK() {
-                return VK.Share.button({ url: "http://underpriced.ru/"}, {type: "round", text: "Поделиться" });
-            },
-            shareButtonFB() {
-                return '<iframe class="fb-iframe" src="https://www.facebook.com/plugins/share_button.php?href=http%3A%2F%2Funderpriced.ru&layout=button_count&size=small&mobile_iframe=true&width=68&height=20&appId" ' +
-                    'width="68" height="20" style="border:none;overflow:hidden" scrolling="no" frameborder="0" ' +
-                    'allowTransparency="true"></iframe>'
             }
         },
         methods: {
@@ -321,9 +313,6 @@
                 this.estimatedPrice = null;
                 this.hasBackendErrors = false;
                 this.errors.clear();
-            },
-            formatPrice(price) {
-                return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
             }
         },
         watch: {

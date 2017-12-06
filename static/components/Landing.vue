@@ -30,7 +30,7 @@
                     </div>
                 </div>
                 <div class="landing-right">
-                    <img class="image" src="/static/icons/screen_main.png" />
+                    <img @click="clickUnderpriced" class="image" src="/static/icons/screen_main.png" />
                 </div>
             </div>
 
