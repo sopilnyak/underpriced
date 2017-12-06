@@ -293,11 +293,16 @@
     .shareFB {
         float: right;
         margin-right: 30px;
+        display: block;
     }
 
     .shareVK {
         float: right;
         margin-right: 10px;
+    }
+
+    .fb-iframe {
+        width: 105px !important;
     }
 
     .dropdown-hidden {

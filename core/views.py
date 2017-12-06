@@ -7,12 +7,13 @@ import math
 client = get_client()
 db = client.underpriced
 flats = db.flats
+flat_limit = 500
 
 
 # Pages
 def index(request):
-
     return render(request, 'index.html')
+
 
 def get_flat(request, id):
     flat = flats.find_one({'_id': id})
@@ -20,9 +21,16 @@ def get_flat(request, id):
         flat = {}
     return JsonResponse(flats)
 
-def get_flat_list(request):
-    flat_list = list(flats.find())
+
+def get_underpriced_list(request):
+    flat_list = list(flats.find({"$where": "this.estimated_price > this.price.rub_price"}).limit(flat_limit))
     return JsonResponse(flat_list, safe=False)
+
+
+def get_overpriced_list(request):
+    flat_list = list(flats.find({"$where": "this.estimated_price < this.price.rub_price"}).limit(flat_limit))
+    return JsonResponse(flat_list, safe=False)
+
 
 def estimate_flat(request):
     if request.method == "POST":
@@ -48,7 +56,6 @@ def estimate_flat(request):
         return JsonResponse({'price': price})
     else:
         return HttpResponseBadRequest()
-
 
 # def usernames(request):
 #

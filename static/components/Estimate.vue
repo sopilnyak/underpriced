@@ -225,7 +225,7 @@
                 return VK.Share.button({ url: "http://underpriced.ru/"}, {type: "round", text: "Поделиться" });
             },
             shareButtonFB() {
-                return '<iframe src="https://www.facebook.com/plugins/share_button.php?href=http%3A%2F%2Funderpriced.ru&layout=button_count&size=small&mobile_iframe=true&width=68&height=20&appId" ' +
+                return '<iframe class="fb-iframe" src="https://www.facebook.com/plugins/share_button.php?href=http%3A%2F%2Funderpriced.ru&layout=button_count&size=small&mobile_iframe=true&width=68&height=20&appId" ' +
                     'width="68" height="20" style="border:none;overflow:hidden" scrolling="no" frameborder="0" ' +
                     'allowTransparency="true"></iframe>'
             }
@@ -345,6 +345,7 @@
         max-height: 300px;
         overflow: hidden;
         width: 13.3em;
+        z-index: 4;
     }
     .header {
         font-size: 20px;

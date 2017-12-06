@@ -28,9 +28,9 @@
                 </span>
                 <div :class="{ 'dropdown-hidden': isDropdownHidden, 'dropdown': !isDropdownHidden }">
                     <div class="dropdown-entry" @click="sortBy('price')">По реальной цене</div>
-                    <div class="dropdown-entry" @click="sortBy('predicted')">По предсказанной цене</div>
-                    <div class="dropdown-entry" @click="sortBy('difference')" title="Сортировать по разнице между реальной и предсказанной ценой">
-                        По разнице
+                    <div class="dropdown-entry" @click="sortBy('estimated_price')">По предсказанной цене</div>
+                    <div class="dropdown-entry" @click="sortBy('relative_goodness')" title="Сортировать по соотношению реальной и предсказанной цен">
+                        По соотношению
                     </div>
                 </div>
             </div>
@@ -47,7 +47,7 @@
                       :per="20">
                 <div v-for="flat in paginated('flats')" class="entry">
                     <div class="image-column">
-                        <div :style="{ backgroundImage: 'url(' + flat.images[0] + ')' }" class="flat-image"></div>
+                        <div :style="{ backgroundImage: 'url(' + getImage(flat) + '), url(\'/static/icons/default_flat.jpg\')' }" class="flat-image"></div>
                     </div>
                     <div class="first-column">
                         <span class="subway">м. {{ Object.keys(flat.underground)[0] }}</span><br>
@@ -69,7 +69,7 @@
                         <span class="external">{{ flat.address }}</span><br>
                     </div>
                     <div class="third-column">
-                        <span title="Предсказанная цена" class="predicted-price">{{ predicted(flat.price.rub_price) }}</span>
+                        <span title="Предсказанная цена" class="predicted-price">{{ formatPrice(flat.estimated_price) }}</span>
                         <span class="predicted-price-hint">руб. / месяц</span><br>
                         <span class="actual-price-title">Реальная цена:</span>
                         <span class="actual-price">{{ formatPrice(flat.price.rub_price) }}</span>
@@ -100,18 +100,15 @@
         },
         data: function () {
             return {
-                filterRooms: "",
-                filterSubway: "",
-                filterDistrict: "",
                 filterQueries: {
-                    rooms: "",
+                    rooms_number: "",
                     underground: "",
                     address: "",
                     distance: "",
                     distance_type: "",
                 },
                 paginate: ['flats'],
-                sortDirection: 1,
+                sortDirection: -1,
                 sortField: "price",
                 isDropdownHidden: true,
             }
@@ -193,11 +190,11 @@
                 if (this.sortField === 'price') {
                     return 'реальной цене';
                 }
-                if (this.sortField === 'predicted') {
+                if (this.sortField === 'estimated_price') {
                     return 'предсказанной цене';
                 }
-                if (this.sortField === 'difference') {
-                    return 'разнице';
+                if (this.sortField === 'relative_goodness') {
+                    return 'соотношению';
                 }
                 return '';
             },
@@ -205,7 +202,7 @@
                 return VK.Share.button({ url: "http://underpriced.ru/"}, {type: "round", text: "Поделиться" });
             },
             shareButtonFB() {
-                return '<iframe src="https://www.facebook.com/plugins/share_button.php?href=http%3A%2F%2Funderpriced.ru&layout=button_count&size=small&mobile_iframe=true&width=68&height=20&appId" ' +
+                return '<iframe class="fb-iframe" src="https://www.facebook.com/plugins/share_button.php?href=http%3A%2F%2Funderpriced.ru&layout=button_count&size=small&mobile_iframe=true&width=68&height=20&appId" ' +
                     'width="68" height="20" style="border:none;overflow:hidden" scrolling="no" frameborder="0" ' +
                     'allowTransparency="true"></iframe>'
             }
@@ -226,6 +223,9 @@
             },
             predicted(price) {
                 return this.formatPrice(parseInt(price) + parseInt(Math.random() * 10000));
+            },
+            getImage(flat) {
+                return flat.images[0] !== undefined ? flat.images[0] : '/static/icons/default_flat.jpg';
             },
         }
     }
