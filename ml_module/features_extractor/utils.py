@@ -44,6 +44,7 @@ numbers of categories. Delete old column
 def encode_with_LabelEncoder(df, column_name):
     label_encoder = LabelEncoder()
     label_encoder.fit(df[column_name])
+    print(df[column_name])
     df[column_name+'_le'] = label_encoder.transform(df[column_name])
     df.drop([column_name], axis=1, inplace=True)
     return label_encoder
