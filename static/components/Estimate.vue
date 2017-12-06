@@ -1,5 +1,6 @@
 <template>
     <div class="estimate">
+        <list-header></list-header>
         <div v-if="isNotLoaded" :key="'notloaded'">
             <g-loading></g-loading>
         </div>
@@ -167,12 +168,14 @@
 
 <script>
     import GLoading from "./GLoading.vue"
+    import ListHeader from './ListHeader.vue'
     import ru from '../resources/validation.js';
 
     export default {
         name: 'Estimate',
         components: {
-            GLoading
+            GLoading,
+            ListHeader
         },
         data: function () {
             return {
