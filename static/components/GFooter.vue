@@ -9,7 +9,7 @@
         name: 'GFooter',
         data: function() {
             return {
-                version: 0.4
+                version: 0.5
             }
         }
     }

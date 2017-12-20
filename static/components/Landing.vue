@@ -6,32 +6,76 @@
                 <g-loading></g-loading>
             </div>
             <div :key="'landing'" v-else>
-                <div class="landing-left">
-                    <div class="landing-intro-text">
 
-                        <div class="landing-main">Найдите недооцененные и переоцененные квартиры</div>
-                        <div class="landing-sub">При помощи нашего сервиса вы можете найти квартиры, цена аренды
-                            которых занижена или завышена
+                <div class="landing-main part-1 container">
+
+                    <div class="row">
+
+                        <div class="col-md-4 landing-block">
+                            <img class="landing-icon" src="static/icons/landing1.png" @click="clickUnderpriced">
+                            <div class="landing-header" @click="clickUnderpriced">
+                                Недооцененные квартиры
+                            </div>
+                            <div class="landing-hint">
+                                Найдите квартиры, цена аренды которых занижена или завышена
+                            </div>
                         </div>
-                        <div class="landing-button" @click="clickUnderpriced">
-                            Перейти к списку объявлений
+
+                        <div class="col-md-4 landing-block">
+                            <img class="landing-icon" src="static/icons/landing2.png" @click="clickEstimate">
+                            <div class="landing-header" @click="clickEstimate">
+                                Оцените свою квартиру
+                            </div>
+                            <div class="landing-hint">
+                                Укажите параметры своей квартиры и мы оценим стоимость ее аренды
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 landing-block">
+                            <img class="landing-icon how-button" src="static/icons/landing3.png">
+                            <div class="landing-header how-button">
+                                Как это работает?
+                            </div>
+                            <div class="landing-hint">
+                                Узнайте, какие алгоритмы мы используем
+                            </div>
                         </div>
 
                     </div>
 
-                    <div class="landing-intro-text">
+                </div>
 
-                        <div class="landing-main">Оцените свою квартиру</div>
-                        <div class="landing-sub">Узнайте, сколько стоит аренда вашей квартиры</div>
-                        <div class="landing-button" @click="clickEstimate">
-                            Оценить квартиру
+                <div class="landing-main part-2">
+
+                    <div class="how-header">Как это работает?</div>
+
+                    <div class="how-block">
+                        <img class="how-icon" src="static/icons/landing4.png">
+                        <div class="how-text how-1">
+                            Мы используем машинное обучение, чтобы проанализировать десятки тысяч объявлений
                         </div>
-
                     </div>
+
+                    <div class="how-block">
+                        <img class="how-icon" src="static/icons/landing5.png">
+                        <div class="how-text how-2">
+                            Мы оцениваем объявления
+                            о сдаче квартир во всех районах Москвы, разного класса и стоимости, и тем самым непрерывно
+                            следим за текущим состоянием рынка недвижимости
+                        </div>
+                    </div>
+
+                    <div class="how-block">
+                        <img class="how-icon" src="static/icons/landing6.png">
+                        <div class="how-text how-3">
+                            Алгоритм определяет, какие параметры дают
+                            наибольший вклад в стоимость квартиры: площадь, удаленность от метро, размер кухни или же
+                            тип окон
+                        </div>
+                    </div>
+
                 </div>
-                <div class="landing-right">
-                    <img @click="clickUnderpriced" class="image" src="/static/icons/screen_main.png" />
-                </div>
+
             </div>
 
         </div>
@@ -52,8 +96,17 @@
             this.$store.state.active = 'landing';
         },
         mounted() {
-            this.setListener();
             this.setHeight();
+
+            // Scroll to next screen
+            $(".how-button").click(function(e) {
+                e.preventDefault();
+                let target = $(this).parent().parent().parent().nextAll("div");
+                $('html, body').stop().animate({
+                   scrollTop: target.offset().top
+                }, 700);
+            });
+
         },
         computed: {
             isNotLoaded() {
@@ -61,15 +114,9 @@
             },
         },
         methods: {
-            setListener() {
-                let this_ = this;
-                $(window).resize(function() {
-                    this_.setHeight();
-                });
-            },
             setHeight() {
-                $('.landing').height($('body').height() - $('.header').outerHeight() -
-                    $('.list-header').outerHeight() - $('.footer').outerHeight());
+                $('.landing-main').height($('body').height() - $('.header').outerHeight() -
+                    $('.list-header').outerHeight() - $('.footer').outerHeight() - 82);
             },
             clickUnderpriced() {
                 this.$store.state.active = 'underpriced';
@@ -91,57 +138,84 @@
         position: relative;
         overflow: hidden;
         color: #EDEFF1;
-        background: -webkit-linear-gradient(to right, #072050, #375084, #072050);
-        background: linear-gradient(to right, #072050, #375084, #072050);
-        box-shadow: inset 0 0 20px rgba(0,0,0,0.3);
-    }
-
-    .landing-button {
-        width: 16em;
-        display: block;
-        margin-top: 20px;
-        color: #000000;
-        font-size: 17px;
-        text-align: center;
-        padding: 0.4em;
-        border-radius: 5px;
-        background-color: #e9d282;
-        height: 1.5em;
-        box-shadow: 0 0 10px rgba(0,0,0,0.5);
-        cursor: pointer;
+        background: #1c263c;
+        background: -webkit-linear-gradient(to right, #1c263c, #072050);
+        background: linear-gradient(to right, #1c263c, #072050);
+        box-shadow: inset 0 0 20px rgba(0,0,0,0.6);
     }
 
     .landing-main {
+        margin: 0 auto;
+        width: 80%;
+        max-width: 1400px;
         font-size: 30px;
         color: #d2d4c4;
-        font-weight: bold;
-        padding-top: 40px;
     }
 
-    .landing-sub {
-        margin-top: 15px;
-        color: #aeb0a0;
-        width: 80%;
+    .landing-block {
+        text-align: center;
+        cursor: pointer;
+        margin-top: 5em;
+    }
+
+    .landing-hint {
         font-size: 17px;
-        max-width: 500px;
+        max-width: 320px;
+        margin: 0 auto 1em;
+        text-align: center;
+        color: #a4a6a8;
     }
 
-    .image {
-        margin-left: 3em;
-        margin-top: 50px;
-        height: 400px;
-        display: block;
-        box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    .landing-icon {
+        width: 200px;
+        height: 200px;
+        border-radius: 50%;
     }
 
-    .landing-left {
+    .landing-header {
+        font-size: 25px;
+        font-weight: 300;
+        max-width: 350px;
+        margin: 1em auto 0.2em;
+    }
+
+    .how-header {
+        text-align: center;
+        font-size: 40px;
+        margin: 0 auto 1em;
+        padding-top: 3em;
+    }
+
+    .how-icon {
         float: left;
-        width: 50%;
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
     }
 
-    .landing-right {
+    .how-text {
         float: left;
-        width: 40%;
+        font-size: 20px;
+        margin-left: 2em;
+        margin-bottom: 1em;
+        width: 80%;
+    }
+
+    .how-block {
+        padding-top: 1.5em;
+        clear: both;
+    }
+
+    .how-1 {
+        margin-top: 30px;
+    }
+
+    .how-2 {
+        margin-top: 20px;
+    }
+
+    .how-3 {
+        margin-top: 20px;
     }
 
 </style>

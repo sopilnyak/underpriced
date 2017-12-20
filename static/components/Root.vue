@@ -199,8 +199,8 @@
     .flat-image {
         width: 250px;
         height: 120px;
-        background-position: center center;
-        background-repeat: no-repeat;
+        background: no-repeat center center;
+        background-size: cover;
     }
 
     .first-column {
