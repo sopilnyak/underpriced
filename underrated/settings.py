@@ -33,7 +33,7 @@ SECRET_KEY = config.get('main', 'SECRET')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['45.55.210.115', 'underpriced.ru', 'www.underpriced.ru']
+ALLOWED_HOSTS = ['104.214.239.181', '45.55.210.115', 'underpriced.ru', 'www.underpriced.ru']
 
 
 # Application definition

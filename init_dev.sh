@@ -4,3 +4,4 @@ pip install -r requirements.txt
 npm install
 npm run build
 ./manage.py runserver 8080
+
