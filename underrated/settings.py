@@ -16,9 +16,9 @@ from configparser import ConfigParser
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'static'),
-)
+#STATICFILES_DIRS = (
+#    os.path.join(BASE_DIR, 'static'),
+#)
 
 config = ConfigParser()
 config.read(os.path.join(BASE_DIR, 'django.conf'))
@@ -31,9 +31,9 @@ config.read(os.path.join(BASE_DIR, 'django.conf'))
 SECRET_KEY = config.get('main', 'SECRET')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['45.55.210.115', 'underpriced.ru', 'www.underpriced.ru']
 
 
 # Application definition
@@ -130,9 +130,12 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
+
 WEBPACK_LOADER = {
     'DEFAULT': {
         'BUNDLE_DIR_NAME': 'dist/',
         'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json'),
     }
 }
+
